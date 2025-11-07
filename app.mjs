@@ -2,7 +2,7 @@ import express from 'express'
 const app = express()
 const port = process.env.PORT || 3000
 
-import {activitiesRouter} from './routes/activities.js'
+// import {activitiesRouter} from './routes/activities.js'
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
