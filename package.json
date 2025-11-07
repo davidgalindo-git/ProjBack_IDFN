@@ -1,0 +1,25 @@
+{
+  "name": "projback_idfn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.mjs",
+  "scripts": {
+    "start": "node app.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidgalindo-git/ProjBack_IDFN.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/davidgalindo-git/ProjBack_IDFN/issues"
+  },
+  "homepage": "https://github.com/davidgalindo-git/ProjBack_IDFN#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
