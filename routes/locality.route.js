@@ -12,7 +12,6 @@ router.get('/', async (req, res) => {
     if (req.query.locality) {
         try {
             let locality = await localityService.getLocality(req.query.locality);
-            console.log(locality);
             let message = `La localité ${req.query.locality} a bien été récupérée !`;
             res.json({message: message, body: locality});
         } catch (error) {
