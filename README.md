@@ -3,4 +3,4 @@ Auteurs:
 Fabian Rostello, Nathan Filipowitz, Imad El Khattabi et David Galindo (SI-CA2a)
 
 # Objectif
-Concevoir une API permettant gérer toutes les données concernant les informations des clients d'une entreprise qui soigne leurs chiens.
+Concevoir une API permettant de gérer toutes les données d'une entreprise qui soigne les chiens de ses clients.
