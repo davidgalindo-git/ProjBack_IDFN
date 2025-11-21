@@ -1,10 +1,9 @@
 import localityModel from '../model/locality.model.js';
 
 const localityService = {
-    getLocality: async (locality) => {
+    getLocality: async (filters) => {
         try {
-            locality = await localityModel.selectLocality(locality);
-            return locality;
+            return await localityModel.selectLocality(filters);
         } catch (error) {
             console.log("Error fetching locality[service]:", error);
         }
