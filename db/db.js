@@ -4,10 +4,11 @@ const db = {
     connectToDB: async () => {
         let con = mysql.createConnection({
             host: process.env.HOST,
-            user: process.env.USER,
+            user: process.env.PSEUDO,
             password: process.env.PASSWORD,
             database: process.env.DATABASE
         })
+        console.log("Succesfully connected to database");
         return con;
     },
 
