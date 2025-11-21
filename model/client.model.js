@@ -23,7 +23,7 @@ const clientModel = {
             let params = [];
 
             if (filters.id) {
-                sql += " AND id = ?";
+                sql += " AND id LIKE ?";
                 params.push(`%${filters.id}%`);
             }
             if (filters.lastname) {
