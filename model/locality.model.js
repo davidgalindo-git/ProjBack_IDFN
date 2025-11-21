@@ -33,8 +33,6 @@ const localityModel = {
                 sql += " AND language_code = ?";
                 params.push(filters.langCode);
             }
-            // console.log(sql);
-            console.log(params);
 
             const [rows] = await con.query(sql, params);
             return rows;
@@ -44,6 +42,10 @@ const localityModel = {
             await db.disconnectToDB(con);
         }
     },
+}
+
+const localityHelpers = {
+
 }
 
 export default localityModel;
