@@ -5,6 +5,7 @@ const serviceModel = {
     selectService: async (filters = {}) => {
         let con;
         try {
+            console.log("model.params", filters) //success
             con = await db.connectToDB()
 
             let sql = `
@@ -48,6 +49,7 @@ const serviceModel = {
             }
 
             const rows = await con.query(sql, params);
+            console.log("model.res", rows) //success
             return rows[0];
         } catch (error) {
             console.log("Error fetching services:", error);
@@ -59,6 +61,7 @@ const serviceModel = {
     createService: async (date, duration_m, location_id, dog_id) => {
             let con;
             try {
+                console.log("model.params", date, duration_m, location_id, dog_id) //success
                 con = await db.connectToDB()
                 let sql =`
                 INSERT INTO
@@ -67,6 +70,7 @@ const serviceModel = {
                 VALUES
                 (?, ?, ?, ?)`
                 const [result] = await con.query(sql, [date, duration_m, location_id, dog_id]);
+                console.log("model.res", result) //success
                 return {id: result.insertId, date, duration_m, location_id, dog_id}
             } catch (error) {
                 console.log("Error creating service:", error);

@@ -3,6 +3,7 @@ import serviceModel from '../model/service.model.js';
 const serviceService = {
     getService: async (filters = {}) => {
         try {
+            console.log("service.params", filters) //success
             const service = await serviceModel.selectService(filters);
             return service;
         } catch (error) {
@@ -13,6 +14,7 @@ const serviceService = {
 
     postService: async (date, duration_m, location_id, dog_id) => {
         try {
+            console.log("service.params", date, duration_m, location_id, dog_id) //success
             const newService = await serviceModel.createService(date, duration_m, location_id, dog_id);
             return newService;
         } catch (error) {
