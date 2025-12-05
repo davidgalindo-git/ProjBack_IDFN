@@ -76,6 +76,37 @@ const clientModel = {
         } finally {
             await db.disconnectToDB(con);
         }
+    },
+    updateClient: async (filters) => {
+        let con;
+        try {
+            con = await db.connectToDB();
+            if (!filters.lastname || filters.lastname.length === 0) {
+                filters.lastname = null;
+            }
+            if (!filters.firstname || filters.firstname.length === 0) {
+                filters.firstname = null;
+            }
+            if (!filters.genre || filters.genre.length === 0) {
+                filters.genre = null;
+            }
+            if (!filters.email || filters.email.length === 0) {
+                filters.email = null;
+            }
+            if (!filters.phone_number || filters.phone_number.length === 0) {
+                filters.phone_number = null;
+            }
+            if (!filters.address || filters.address.length === 0) {
+                filters.address = null;
+            }
+            const [rows] = await con.query("INSERT INTO WhatTheDog.clients (lastname, firstname, genre, email, phone_number, address) VALUES (?, ?, ?, ?, ?, ?)", [filters.lastname, filters.firstname, filters.genre, filters.email, filters.phone_number, filters.address]);
+            return rows;
+        } catch (error) {
+            console.log("Error fetching client:", error);
+            throw error;
+        } finally {
+            await db.disconnectToDB(con);
+        }
     }
 }
 
