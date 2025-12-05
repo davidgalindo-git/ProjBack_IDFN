@@ -27,5 +27,14 @@ router.get('/', async (req, res) => {
             res.status(404).json({error: error.message});
         }
     });
+router.post('/', async (req, res) => {
+    try {
+        const newDog = req.body; // récupère les données envoyées en JSON
+        const insertedDog = await dogsService.createDog(newDog);
+        res.status(201).json({ message: "Chien ajouté avec succès !", body: insertedDog });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
 
 export default router;

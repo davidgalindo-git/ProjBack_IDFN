@@ -10,7 +10,19 @@ const dogsService = {
         } catch (error) {
             console.log("Error fetching locality[service]:", error);
         }
+    },
+    createDog: async (dogData) => {
+        try {
+            const newDog = await dogsModel.insertDog(dogData);
+            return newDog;
+        } catch (error) {
+            console.log("Erreur création chien [service]:", error);
+            throw error;
+        }
     }
+
 }
+
+
 
 export default dogsService;

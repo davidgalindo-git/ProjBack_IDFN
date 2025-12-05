@@ -70,6 +70,31 @@ WHERE 1=1
         } finally {
             await db.disconnectToDB(con);
         }
+    },
+    insertDog: async (dog) => {
+        let con;
+        try {
+            con = await db.connectToDB();
+            const sql = `
+            INSERT INTO dogs (name, sex, is_mixed, birthdate, is_sterilized, is_deceased, race_id, client_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+            const params = [
+                dog.name,
+                dog.sex,
+                dog.is_mixed || 0,
+                dog.birthdate ? new Date(dog.birthdate).toISOString().split('T')[0] : null,
+                dog.is_sterilized || 0,
+                dog.is_deceased || 0,
+                dog.race_id || null,
+                dog.client_id || null
+            ];
+
+            const [result] = await con.query(sql, params);
+            return { id: result.insertId, ...dog }; // retourne le chien ajouté avec son id
+        } finally {
+            await db.disconnectToDB(con);
+        }
     }
 }
 
