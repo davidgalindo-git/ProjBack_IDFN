@@ -75,10 +75,10 @@ const serviceModel = {
                 await db.disconnectToDB(con);
             }
         },
-    updateActivity: async (id, {date, duration_m, location_id, dog_id}) => {
+    updateService: async (id, {date, duration_m, location_id, dog_id}) => {
             let con
             try{
-                console.log("model.params", id, date, duration_m, location_id, dog_id)
+                console.log("model.params", id, date, duration_m, location_id, dog_id) //success
                 con = await db.connectToDB();
                 let sql=`
                 UPDATE
@@ -91,7 +91,7 @@ const serviceModel = {
                 WHERE id = ?
                 `
                 const [result] = await con.query(sql, [date, duration_m, location_id, dog_id, id]);
-                console.log("model.res", result)
+                console.log("model.res", result) //success
                 return {affectedRows: result.affectedRows, id, date, duration_m, location_id, dog_id};
             } catch (error) {
                 console.log("Error updating service:", error);
@@ -99,5 +99,6 @@ const serviceModel = {
             } finally {
                await db.disconnectToDB(con);
             }
+        }
 }
 export default serviceModel;

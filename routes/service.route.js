@@ -43,17 +43,16 @@ router.post('/create', async (req, res) => {
 router.patch('/:id/update', async (req, res) => {
     try {
         const id = parseInt(req.params.id)
-        console.log("route.id", id)
+        console.log("route.id", id) //success
         const {date, duration_m, location_id, dog_id} = req.body;
-        console.log("route.body", date, duration_m, location_id, dog_id)
-        const resUpdateService = await serviceService.postService(id, {date, duration_m, location_id, dog_id});
+        console.log("route.body", date, duration_m, location_id, dog_id) //success
+        const resUpdateService = await serviceService.patchService(id, {date, duration_m, location_id, dog_id});
         if (resUpdateService === 0) {
             res.status(404).json({error: "Activité non trouvée"})
         } else {
-            console.log("route.res", resUpdateService)
-            const updatedService= await serviceService.getService(id);
+            console.log("route.res", resUpdateService) //success
             let message = `Le service a bien été mis à jour !`;
-            res.json({message: message, body: updatedService});
+            res.json({message: message, body: resUpdateService});
         }
 
     } catch (error) {
