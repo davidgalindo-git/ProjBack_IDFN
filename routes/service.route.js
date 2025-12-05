@@ -22,7 +22,6 @@ router.get('/', async (req, res) => {
 router.post('/create', async (req, res) => {
     try {
         const {date, duration_m, location_id, dog_id} = req.body;
-
         // Validate required fields
         if (!location_id || !dog_id) {
           return res.status(400).json({

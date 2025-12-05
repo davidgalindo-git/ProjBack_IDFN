@@ -56,18 +56,16 @@ const serviceModel = {
             await db.disconnectToDB(con);
         }
     },
-    createService: async (values = {date, duration_m, location_id, dog_id}) => {
+    createService: async (date, duration_m, location_id, dog_id) => {
             let con;
             try {
                 con = await db.connectToDB()
-
                 let sql =`
                 INSERT INTO
                 services
                 (date, duration_m, location_id, dog_id)
                 VALUES
                 (?, ?, ?, ?)`
-
                 const [result] = await con.query(sql, [date, duration_m, location_id, dog_id]);
                 return {id: result.insertId, date, duration_m, location_id, dog_id}
             } catch (error) {

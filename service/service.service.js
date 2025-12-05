@@ -9,11 +9,11 @@ const serviceService = {
             console.log("Error fetching service[service]:", error);
             throw error;
         }
-    }
+    },
 
-    postService: async (values = {}) => {
+    postService: async (date, duration_m, location_id, dog_id) => {
             try {
-                const newService = await serviceModel.createService(values);
+                const newService = await serviceModel.createService(date, duration_m, location_id, dog_id);
                 return newService;
             } catch (error) {
                 console.log("Error fetching service[service]:", error);
