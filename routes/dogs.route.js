@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
         } catch (error) {
             res.status(404).json({error: error.message});
         }
-    });
+});
 router.post('/', async (req, res) => {
     try {
         const newDog = req.body; // récupère les données envoyées en JSON
@@ -36,5 +36,19 @@ router.post('/', async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
+router.put('/:id', async (req, res) => {
+    try {
+        const dogId = parseInt(req.params.id);  // <--- récupération de l'ID ici
+        const updatedDog = await dogsService.updateDog(dogId, req.body);
+
+        res.json({
+            message: "Chien mis à jour avec succès !",
+            body: updatedDog
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
 
 export default router;
