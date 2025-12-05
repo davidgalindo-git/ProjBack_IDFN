@@ -5,10 +5,10 @@ const localityModel = {
         let con;
         try {
             con = await db.connectToDB()
-            const rows = await con.query('SELECT * FROM localities');
+            const rows = await con.query('SELECT * FROM locations');
             return rows[0];
         } catch (error) {
-            console.log("Error fetching contacts:", error);
+            console.log("Error fetching location:", error);
             throw error;
         } finally {
             await db.disconnectToDB(con);
@@ -20,10 +20,10 @@ const localityModel = {
         try {
             con = await db.connectToDB()
             const searchPattern = `%${locality}%`;
-            const rows = await con.query('SELECT * FROM pizzas WHERE name LIKE ?', [searchPattern]);
+            const rows = await con.query('SELECT * FROM locations WHERE name LIKE ?', [searchPattern]);
             return rows[0];
         } catch (error) {
-            console.log("Error fetching contacts:", error);
+            console.log("Error fetching location:", error);
             throw error;
         } finally {
             await db.disconnectToDB(con);
