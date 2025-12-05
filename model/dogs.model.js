@@ -95,7 +95,39 @@ WHERE 1=1
         } finally {
             await db.disconnectToDB(con);
         }
+    },
+    updateDog: async (id, dog) => {
+        let con;
+        try {
+            con = await db.connectToDB();
+
+            const sql = `
+            UPDATE dogs
+            SET name = ?, sex = ?, is_mixed = ?, birthdate = ?, is_sterilized = ?, is_deceased = ?, race_id = ?, client_id = ?
+            WHERE id = ?
+        `;
+
+            const params = [
+                dog.name,
+                dog.sex,
+                dog.is_mixed,
+                dog.birthdate ? new Date(dog.birthdate).toISOString().split('T')[0] : null,
+                dog.is_sterilized,
+                dog.is_deceased,
+                dog.race_id,
+                dog.client_id,
+                id
+            ];
+
+            await con.query(sql, params);
+
+            return { id, ...dog };
+
+        } finally {
+            await db.disconnectToDB(con);
+        }
     }
+
 }
 
 export default DogsModel;

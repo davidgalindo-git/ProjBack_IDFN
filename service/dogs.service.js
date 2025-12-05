@@ -19,7 +19,16 @@ const dogsService = {
             console.log("Erreur création chien [service]:", error);
             throw error;
         }
+    },
+    updateDog: async (id, data) => {
+        try {
+            return await dogsModel.updateDog(id, data);
+        } catch (error) {
+            console.log("Erreur update chien :", error);
+            throw error;
+        }
     }
+
 
 }
 
