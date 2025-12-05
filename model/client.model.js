@@ -1,25 +1,11 @@
 import { db } from '../db/db.js'
 
 const clientModel = {
-    selectAllClients: async () => {
-        let con;
-        try {
-            con = await db.connectToDB()
-            const rows = await con.query('SELECT * FROM clients');
-            return rows[0];
-        } catch (error) {
-            console.log("Error fetching clients:", error);
-            throw error;
-        } finally {
-            await db.disconnectToDB(con);
-        }
-    },
-
     selectClient: async (filters) => {
         let con;
         try {
             con = await db.connectToDB()
-            let sql = "SELECT * FROM clients WHERE 1=1";
+            let sql = "SELECT * FROM clients WHERE 1=1"; //returns all clients if no parameters are added to the url
             let params = [];
 
             if (filters.id) {
@@ -53,10 +39,6 @@ const clientModel = {
 
             const [rows] = await con.query(sql, params);
             return rows;
-            // const searchPattern = `%${client}%`;
-            // const rows = await con.query('SELECT * FROM clients WHERE id LIKE ?', [searchPattern]);
-            // console.log(searchPattern)
-            // return rows[0];
         } catch (error) {
             console.log("Error fetching client:", error);
             throw error;
@@ -64,6 +46,37 @@ const clientModel = {
             await db.disconnectToDB(con);
         }
     },
+    createClient: async (filters) => {
+        let con;
+        try {
+            con = await db.connectToDB();
+            if (!filters.lastname || filters.lastname.length === 0) {
+                filters.lastname = null;
+            }
+            if (!filters.firstname || filters.firstname.length === 0) {
+                filters.firstname = null;
+            }
+            if (!filters.genre || filters.genre.length === 0) {
+                filters.genre = null;
+            }
+            if (!filters.email || filters.email.length === 0) {
+                filters.email = null;
+            }
+            if (!filters.phone_number || filters.phone_number.length === 0) {
+                filters.phone_number = null;
+            }
+            if (!filters.address || filters.address.length === 0) {
+                filters.address = null;
+            }
+            const [rows] = await con.query("INSERT INTO WhatTheDog.clients (lastname, firstname, genre, email, phone_number, address) VALUES (?, ?, ?, ?, ?, ?)", [filters.lastname, filters.firstname, filters.genre, filters.email, filters.phone_number, filters.address]);
+            return rows;
+        } catch (error) {
+            console.log("Error fetching client:", error);
+            throw error;
+        } finally {
+            await db.disconnectToDB(con);
+        }
+    }
 }
 
 export default clientModel;
