@@ -9,15 +9,15 @@ router.get('/', async (req, res) => {
         let message = "";
         let locality = await localityService.getLocality({
             name: req.query.name,
-            postalCode: req.query.postalCode,
-            postalCodeComplement: req.query.postalCodeComplement,
-            toponyme: req.query.toponyme,
-            canton: req.query.canton,
-            langCode: req.query.langCode
+            postal_code: req.query.postal_code,
+            postal_code_complement: req.query.postal_code_complement,
+            toponym: req.query.toponym,
+            canton_code: req.query.canton_code,
+            lang_code: req.query.lang_code
         });
 
         if (locality.length !== 0) {
-            message = `La localité ${req.query.name} à bien été trouvée`;
+            message = `La localité ${locality["name"]} à bien été trouvée`;
         } else {
             message = `Aucune localité n'a été trouvé`;
         }

@@ -13,29 +13,29 @@ const localityModel = {
                 sql += " AND name LIKE ?";
                 params.push(`%${filters.name}%`);
             }
-            if (filters.postalCode) {
+            if (filters.postal_code) {
                 sql += " AND postal_code = ?";
-                params.push(filters.postalCode);
+                params.push(filters.postal_code);
             }
-            if (filters.postalCodeComplement) {
+            if (filters.postal_code_complement) {
                 sql += " AND postal_code_complement = ?";
-                params.push(filters.postalCodeComplement);
+                params.push(filters.postal_code_complement);
             }
-            if (filters.toponyme) {
+            if (filters.toponym) {
                 sql += " AND toponym = ?";
-                params.push(filters.toponyme);
+                params.push(filters.toponym);
             }
-            if (filters.canton) {
+            if (filters.canton_code) {
                 sql += " AND canton_code = ?";
-                params.push(filters.canton);
+                params.push(filters.canton_code);
             }
-            if (filters.langCode) {
+            if (filters.lang_code) {
                 sql += " AND language_code = ?";
-                params.push(filters.langCode);
+                params.push(filters.lang_code);
             }
 
             const [rows] = await con.query(sql, params);
-            return rows;
+            return rows [0];
         } catch (error) {
             throw SQLException;
         } finally {
