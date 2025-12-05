@@ -23,6 +23,7 @@ const serviceService = {
 
     patchService: async (id, {date, duration_m, location_id, dog_id}) => {
         try {
+            console.log("service.params", id, date, duration_m, location_id, dog_id)
             const newService = await serviceModel.updateService(id, {date, duration_m, location_id, dog_id});
             return newService;
         } catch (error) {

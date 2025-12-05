@@ -78,6 +78,7 @@ const serviceModel = {
     updateActivity: async (id, {date, duration_m, location_id, dog_id}) => {
             let con
             try{
+                console.log("model.params", id, date, duration_m, location_id, dog_id)
                 con = await db.connectToDB();
                 let sql=`
                 UPDATE
@@ -90,6 +91,7 @@ const serviceModel = {
                 WHERE id = ?
                 `
                 const [result] = await con.query(sql, [date, duration_m, location_id, dog_id, id]);
+                console.log("model.res", result)
                 return {affectedRows: result.affectedRows, id, date, duration_m, location_id, dog_id};
             } catch (error) {
                 console.log("Error updating service:", error);
