@@ -126,7 +126,23 @@ WHERE 1=1
         } finally {
             await db.disconnectToDB(con);
         }
+    },
+    deleteDog: async (id) => {
+        let con;
+        try {
+            con = await db.connectToDB();
+
+            const [result] = await con.query(
+                "DELETE FROM dogs WHERE id = ?",
+                [id]
+            );
+
+            return result.affectedRows;  // <--- important
+        } finally {
+            await db.disconnectToDB(con);
+        }
     }
+
 
 }
 

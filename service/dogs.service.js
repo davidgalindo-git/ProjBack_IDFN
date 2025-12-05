@@ -27,8 +27,21 @@ const dogsService = {
             console.log("Erreur update chien :", error);
             throw error;
         }
-    }
+    },
+    deleteDog: async (id) => {
+        try {
+            const deleted = await dogsModel.deleteDog(id);
 
+            if (deleted === 0) {
+                throw new Error("Aucun chien trouvé pour cet ID.");
+            }
+
+            return deleted;
+
+        } catch (error) {
+            throw error;
+        }
+    }
 
 }
 
