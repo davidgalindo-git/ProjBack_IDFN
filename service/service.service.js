@@ -12,14 +12,24 @@ const serviceService = {
     },
 
     postService: async (date, duration_m, location_id, dog_id) => {
-            try {
-                const newService = await serviceModel.createService(date, duration_m, location_id, dog_id);
-                return newService;
-            } catch (error) {
-                console.log("Error fetching service[service]:", error);
-                throw error;
-            }
+        try {
+            const newService = await serviceModel.createService(date, duration_m, location_id, dog_id);
+            return newService;
+        } catch (error) {
+            console.log("Error creating service[service]:", error);
+            throw error;
         }
+    },
+
+    patchService: async (id, {date, duration_m, location_id, dog_id}) => {
+        try {
+            const newService = await serviceModel.updateService(id, {date, duration_m, location_id, dog_id});
+            return newService;
+        } catch (error) {
+            console.log("Error updating service[service]:", error);
+            throw error;
+        }
+    }
 }
 
 export default serviceService;
