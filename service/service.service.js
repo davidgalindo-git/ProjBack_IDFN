@@ -10,6 +10,16 @@ const serviceService = {
             throw error;
         }
     }
+
+    postService: async (values = {}) => {
+            try {
+                const newService = await serviceModel.createService(values);
+                return newService;
+            } catch (error) {
+                console.log("Error fetching service[service]:", error);
+                throw error;
+            }
+        }
 }
 
 export default serviceService;

@@ -1,4 +1,5 @@
-import { db } from '../db/db.js'
+import mysql from 'mysql2/promise';
+import { db } from '../db/db.js';
 
 const serviceModel = {
     selectService: async (filters = {}) => {
@@ -31,9 +32,9 @@ const serviceModel = {
                 params.push(filters.date);
             }
 
-            if (filters.duration){
-                sql += " AND duration = ?";
-                params.push(filters.duration);
+            if (filters.duration_m){
+                sql += " AND duration_m = ?";
+                params.push(filters.duration_m);
             }
 
             if (filters.location) {
@@ -49,12 +50,32 @@ const serviceModel = {
             const rows = await con.query(sql, params);
             return rows[0];
         } catch (error) {
-            console.log("Error fetching contacts:", error);
+            console.log("Error fetching services:", error);
             throw error;
         } finally {
             await db.disconnectToDB(con);
         }
     },
-}
+    createService: async (values = {date, duration_m, location_id, dog_id}) => {
+            let con;
+            try {
+                con = await db.connectToDB()
 
+                let sql =`
+                INSERT INTO
+                services
+                (date, duration_m, location_id, dog_id)
+                VALUES
+                (?, ?, ?, ?)`
+
+                const [result] = await con.query(sql, [date, duration_m, location_id, dog_id]);
+                return {id: result.insertId, date, duration_m, location_id, dog_id}
+            } catch (error) {
+                console.log("Error creating service:", error);
+                throw error;
+            } finally {
+                await db.disconnectToDB(con);
+            }
+        },
+}
 export default serviceModel;
