@@ -8,16 +8,16 @@ const DogsModel = {
             con = await db.connectToDB();
 
             let sql = `
-SELECT dogs.id, dogs.name, dogs.sex, dogs.is_mixed, dogs.birthdate, dogs.is_sterilized, dogs.is_deceased,
-       races.name as race_name, CONCAT(clients.firstname,' ',clients.lastname) AS client_name
-FROM dogs
-LEFT JOIN races ON dogs.race_id = races.id
-LEFT JOIN clients ON dogs.client_id = clients.id
-WHERE 1=1
-`;
+                SELECT dogs.id, dogs.name, dogs.sex, dogs.is_mixed, dogs.birthdate, dogs.is_sterilized, dogs.is_deceased,
+                       races.name as race_name, CONCAT(clients.firstname,' ',clients.lastname) AS client_name
+                FROM dogs
+                         LEFT JOIN races ON dogs.race_id = races.id
+                         LEFT JOIN clients ON dogs.client_id = clients.id
+                WHERE 1=1
+            `;
             let params = [];
 
-            if(filters.id !== undefined){
+            if (filters.id !== undefined) {
                 sql += " AND dogs.id = ?";
                 params.push(filters.id);
             }
@@ -53,11 +53,16 @@ WHERE 1=1
             }
 
             if (filters.client_name !== undefined) {
-                sql += " AND (clients.firstname LIKE ? OR clients.lastname LIKE ? OR CONCAT(clients.firstname,' ',clients.lastname) LIKE ?)";
-                const namePattern = `%${filters.client_name}%`; // ajoute les % pour la recherche partielle
-                params.push(namePattern, namePattern, namePattern);
+                sql += `
+                AND (
+                    clients.firstname LIKE ?
+                    OR clients.lastname LIKE ?
+                    OR CONCAT(clients.firstname,' ',clients.lastname) LIKE ?
+                )
+            `;
+                const pattern = `%${filters.client_name}%`;
+                params.push(pattern, pattern, pattern);
             }
-
 
             if (filters.race_name !== undefined) {
                 sql += " AND races.name = ?";
@@ -67,10 +72,14 @@ WHERE 1=1
             const [rows] = await con.query(sql, params);
             return rows;
 
+        } catch (error) {
+            console.log("Erreur selectDogs [model] :", error.message);
+            throw error; // <--- indispensable pour que service/route gèrent l'erreur
         } finally {
-            await db.disconnectToDB(con);
+            if (con) await db.disconnectToDB(con);
         }
     },
+
     insertDog: async (dog) => {
         let con;
         try {
