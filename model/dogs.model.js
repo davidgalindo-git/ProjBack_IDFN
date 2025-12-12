@@ -101,23 +101,48 @@ WHERE 1=1
         try {
             con = await db.connectToDB();
 
-            const sql = `
-            UPDATE dogs
-            SET name = ?, sex = ?, is_mixed = ?, birthdate = ?, is_sterilized = ?, is_deceased = ?, race_id = ?, client_id = ?
-            WHERE id = ?
-        `;
+            const fields = [];
+            const params = [];
 
-            const params = [
-                dog.name,
-                dog.sex,
-                dog.is_mixed,
-                dog.birthdate ? new Date(dog.birthdate).toISOString().split('T')[0] : null,
-                dog.is_sterilized,
-                dog.is_deceased,
-                dog.race_id,
-                dog.client_id,
-                id
-            ];
+            if (dog.name !== undefined) {
+                fields.push("name = ?");
+                params.push(dog.name);
+            }
+            if (dog.sex !== undefined) {
+                fields.push("sex = ?");
+                params.push(dog.sex);
+            }
+            if (dog.is_mixed !== undefined) {
+                fields.push("is_mixed = ?");
+                params.push(dog.is_mixed);
+            }
+            if (dog.birthdate !== undefined) {
+                params.push(new Date(dog.birthdate).toISOString().split('T')[0]);
+                fields.push("birthdate = ?");
+            }
+            if (dog.is_sterilized !== undefined) {
+                fields.push("is_sterilized = ?");
+                params.push(dog.is_sterilized);
+            }
+            if (dog.is_deceased !== undefined) {
+                fields.push("is_deceased = ?");
+                params.push(dog.is_deceased);
+            }
+            if (dog.race_id !== undefined) {
+                fields.push("race_id = ?");
+                params.push(dog.race_id);
+            }
+            if (dog.client_id !== undefined) {
+                fields.push("client_id = ?");
+                params.push(dog.client_id);
+            }
+
+            if (fields.length === 0) {
+                throw new Error("Aucun champ à mettre à jour");
+            }
+
+            const sql = `UPDATE dogs SET ${fields.join(", ")} WHERE id = ?`;
+            params.push(id);
 
             await con.query(sql, params);
 
@@ -127,6 +152,7 @@ WHERE 1=1
             await db.disconnectToDB(con);
         }
     },
+
     deleteDog: async (id) => {
         let con;
         try {

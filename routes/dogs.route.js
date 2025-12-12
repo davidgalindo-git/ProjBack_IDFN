@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
-router.put('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
     try {
         const dogId = parseInt(req.params.id);  // <--- récupération de l'ID ici
         const updatedDog = await dogsService.updateDog(dogId, req.body);
@@ -49,17 +49,19 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
-router.delete('/:id',async (req, res)=>{
+router.delete('/:id', async (req, res) => {
     try {
         const dogId = parseInt(req.params.id);
-        const deleteDog = await dogsService.deleteDog(dogId)
+        const deleted = await dogsService.deleteDog(dogId);
 
-        res.json({
-            message: "Le chien a bien été supprimé !",
-        });
-    } catch (error){
-        res.status(400).json({error:error.message})
+        if (!deleted) {
+            return res.status(404).json({ error: `Chien avec l'id ${dogId} introuvable.` });
+        }
+
+        res.json({ message: "Le chien a bien été supprimé !", deletedId: dogId });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-})
+});
 
 export default router;
