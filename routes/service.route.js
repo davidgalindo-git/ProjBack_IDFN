@@ -15,7 +15,7 @@ serviceRouter.get('/', async (req, res) => {
         console.log("route.res", services) //success
 
         let message = `Le ou les services ont bien été récupéré.s !`;
-        res.json({message: message, body: services});
+        res.status(200).json({message: message, body: services});
 
     } catch (error) {
         res.status(500).json({error: error.message});
@@ -38,7 +38,7 @@ serviceRouter.post('/create', async (req, res) => {
 
         console.log("route.res", newService) //success
         let message = `Le service a bien été créé !`;
-        res.json({message: message, body: newService});
+        res.status(200).json({message: message, body: newService});
 
     } catch (error) {
         res.status(500).json({error: error.message});
@@ -58,7 +58,7 @@ serviceRouter.patch('/:id/update', async (req, res) => {
         } else {
             console.log("route.res", resUpdateService) //success
             let message = `Le service a bien été mis à jour !`;
-            res.json({message: message, body: resUpdateService});
+            res.status(200).json({message: message, body: resUpdateService});
         }
 
     } catch (error) {
@@ -77,7 +77,7 @@ serviceRouter.delete('/:id/delete', async (req, res) => {
         } else {
             console.log("route.res", resDeleteService) //
             let message = `Le service a bien été supprimé !`;
-            res.json({message: message, body: resDeleteService});
+            res.status(200).json({message: message, body: resDeleteService});
         }
 
     } catch (error) {
