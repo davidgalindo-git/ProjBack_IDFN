@@ -28,10 +28,9 @@ router.get('/', async (req, res) => {
                 message = `La localité ${locality[0]["toponym"]} à bien été trouvée`;
             }
         }
-        res.json({message: message, body: locality})
-
+        res.status(200).json({message: message, body: locality})
     } catch (error) {
-        res.status(404).json({error: error.message});
+        res.status(500).json({error: error.message});
     }
 });
 
@@ -49,13 +48,13 @@ router.post('/', async (req, res) => {
 
         if (locality === null || locality === undefined) {
             message = `Aucune localité n'a été ajoutée`;
+            res.status(500).json({error: message})
         } else {
             message = `La localité ${req.body.name} à bien été ajoutée`;
+            res.status(200).json({message: message})
         }
-        res.status(404).json({message: message})
-
     } catch (error) {
-        res.status(404).json({error: error.message});
+        res.status(500).json({error: error.message});
     }
 });
 
@@ -77,10 +76,11 @@ router.patch('/:id/update', async (req, res) => {
 
             if (locality < 1) {
                 message = `Erreur dans la mise à jour de la localité avec l'ID ${id}`;
+                res.status(500).json({message: message})
             } else {
                 message = `La localité ${req.body.name} à bien été modifiée`;
+                res.status(200).json({message: message})
             }
-            res.status(200).json({message: message})
         } else {
             const message = `La localité avec l'ID ${id} n'existe pas...`;
             res.status(404).json({error: message})
