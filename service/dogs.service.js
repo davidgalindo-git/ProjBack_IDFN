@@ -4,11 +4,12 @@ const dogsService = {
     getDogs: async (filters) => {
         try {
             const dogs = await dogsModel.selectDogs(filters);
-            console.log("Dogs fetched : ", dogs);
+            console.log("Dogs fetched :", dogs);
             return dogs;
 
         } catch (error) {
-            console.log("Error fetching locality[service]:", error);
+            console.log("Erreur récupération chiens [service] :", error.message);
+            throw error; // <--- OBLIGATOIRE
         }
     },
     createDog: async (dogData) => {

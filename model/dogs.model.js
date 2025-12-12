@@ -8,16 +8,16 @@ const DogsModel = {
             con = await db.connectToDB();
 
             let sql = `
-SELECT dogs.id, dogs.name, dogs.sex, dogs.is_mixed, dogs.birthdate, dogs.is_sterilized, dogs.is_deceased,
-       races.name as race_name, CONCAT(clients.firstname,' ',clients.lastname) AS client_name
-FROM dogs
-LEFT JOIN races ON dogs.race_id = races.id
-LEFT JOIN clients ON dogs.client_id = clients.id
-WHERE 1=1
-`;
+                SELECT dogs.id, dogs.name, dogs.sex, dogs.is_mixed, dogs.birthdate, dogs.is_sterilized, dogs.is_deceased,
+                       races.name as race_name, CONCAT(clients.firstname,' ',clients.lastname) AS client_name
+                FROM dogs
+                         LEFT JOIN races ON dogs.race_id = races.id
+                         LEFT JOIN clients ON dogs.client_id = clients.id
+                WHERE 1=1
+            `;
             let params = [];
 
-            if(filters.id !== undefined){
+            if (filters.id !== undefined) {
                 sql += " AND dogs.id = ?";
                 params.push(filters.id);
             }
@@ -53,11 +53,16 @@ WHERE 1=1
             }
 
             if (filters.client_name !== undefined) {
-                sql += " AND (clients.firstname LIKE ? OR clients.lastname LIKE ? OR CONCAT(clients.firstname,' ',clients.lastname) LIKE ?)";
-                const namePattern = `%${filters.client_name}%`; // ajoute les % pour la recherche partielle
-                params.push(namePattern, namePattern, namePattern);
+                sql += `
+                AND (
+                    clients.firstname LIKE ?
+                    OR clients.lastname LIKE ?
+                    OR CONCAT(clients.firstname,' ',clients.lastname) LIKE ?
+                )
+            `;
+                const pattern = `%${filters.client_name}%`;
+                params.push(pattern, pattern, pattern);
             }
-
 
             if (filters.race_name !== undefined) {
                 sql += " AND races.name = ?";
@@ -67,10 +72,14 @@ WHERE 1=1
             const [rows] = await con.query(sql, params);
             return rows;
 
+        } catch (error) {
+            console.log("Erreur selectDogs [model] :", error.message);
+            throw error; // <--- indispensable pour que service/route gèrent l'erreur
         } finally {
-            await db.disconnectToDB(con);
+            if (con) await db.disconnectToDB(con);
         }
     },
+
     insertDog: async (dog) => {
         let con;
         try {
@@ -101,32 +110,58 @@ WHERE 1=1
         try {
             con = await db.connectToDB();
 
-            const sql = `
-            UPDATE dogs
-            SET name = ?, sex = ?, is_mixed = ?, birthdate = ?, is_sterilized = ?, is_deceased = ?, race_id = ?, client_id = ?
-            WHERE id = ?
-        `;
+            const fields = [];
+            const params = [];
 
-            const params = [
-                dog.name,
-                dog.sex,
-                dog.is_mixed,
-                dog.birthdate ? new Date(dog.birthdate).toISOString().split('T')[0] : null,
-                dog.is_sterilized,
-                dog.is_deceased,
-                dog.race_id,
-                dog.client_id,
-                id
-            ];
+            if (dog.name !== undefined) {
+                fields.push("name = ?");
+                params.push(dog.name);
+            }
+            if (dog.sex !== undefined) {
+                fields.push("sex = ?");
+                params.push(dog.sex);
+            }
+            if (dog.is_mixed !== undefined) {
+                fields.push("is_mixed = ?");
+                params.push(dog.is_mixed);
+            }
+            if (dog.birthdate !== undefined) {
+                params.push(new Date(dog.birthdate).toISOString().split('T')[0]);
+                fields.push("birthdate = ?");
+            }
+            if (dog.is_sterilized !== undefined) {
+                fields.push("is_sterilized = ?");
+                params.push(dog.is_sterilized);
+            }
+            if (dog.is_deceased !== undefined) {
+                fields.push("is_deceased = ?");
+                params.push(dog.is_deceased);
+            }
+            if (dog.race_id !== undefined) {
+                fields.push("race_id = ?");
+                params.push(dog.race_id);
+            }
+            if (dog.client_id !== undefined) {
+                fields.push("client_id = ?");
+                params.push(dog.client_id);
+            }
+
+            if (fields.length === 0) {
+                throw new Error("Aucun champ à mettre à jour");
+            }
+
+            const sql = `UPDATE dogs SET ${fields.join(", ")} WHERE id = ?`;
+            params.push(id);
 
             await con.query(sql, params);
 
-            return { id, ...dog };
-
+            const [rows] = await con.query("SELECT * FROM dogs WHERE id = ?", [id]);
+            return rows[0];
         } finally {
             await db.disconnectToDB(con);
         }
     },
+
     deleteDog: async (id) => {
         let con;
         try {
