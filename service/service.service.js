@@ -1,0 +1,49 @@
+import serviceModel from '../model/service.model.js';
+
+const serviceService = {
+    getService: async (filters = {}) => {
+        try {
+            console.log("service.params", filters) //success
+            const service = await serviceModel.selectService(filters);
+            return service;
+        } catch (error) {
+            console.log("Error fetching service[service]:", error);
+            throw error;
+        }
+    },
+
+    postService: async (date, duration_m, location_id, dog_id) => {
+        try {
+            console.log("service.params", date, duration_m, location_id, dog_id) //success
+            const newService = await serviceModel.createService(date, duration_m, location_id, dog_id);
+            return newService;
+        } catch (error) {
+            console.log("Error creating service[service]:", error);
+            throw error;
+        }
+    },
+
+    patchService: async (id, {date, duration_m, location_id, dog_id}) => {
+        try {
+            console.log("service.params", id, date, duration_m, location_id, dog_id) //success
+            const newService = await serviceModel.updateService(id, {date, duration_m, location_id, dog_id});
+            return newService;
+        } catch (error) {
+            console.log("Error updating service[service]:", error);
+            throw error;
+        }
+    },
+
+    deleteService: async (id) => {
+        try {
+            console.log("service.params", id)
+            const deleteService = await serviceModel.deleteService(id);
+            return deleteService;
+        } catch (error) {
+            console.log("Error deleting service[service]:", error);
+            throw error;
+        }
+    }
+}
+
+export default serviceService;
