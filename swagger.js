@@ -79,6 +79,64 @@ const options = {
                     },
                     required: ['name', 'postal_code', 'toponym', 'canton_code', 'language_code'],
                 },
+                Service: {
+                    type: 'object',
+                    properties: {
+                        id: {
+                            type: 'integer',
+                            description: 'Identifiant unique du service.',
+                            example: 1
+                        },
+                        date: {
+                            type: 'string',
+                            format: 'date-time',
+                            description: 'Date et heure du service.',
+                            example: '2025-12-25T14:30:00Z'
+                        },
+                        duration_m: {
+                            type: 'integer',
+                            description: 'Durée du service en minutes.',
+                            example: 60
+                        },
+                        location_id: {
+                            type: 'integer',
+                            description: 'ID de la localité où le service a eu lieu.',
+                            example: 1
+                        },
+                        dog_id: {
+                            type: 'integer',
+                            description: 'ID du chien concerné par le service.',
+                            example: 5
+                        },
+                    },
+                },
+                ServiceInput: {
+                    type: 'object',
+                    properties: {
+                        date: {
+                            type: 'string',
+                            format: 'date-time',
+                            description: 'Date et heure du service (optionnel lors de la création/modification, mais recommandé).',
+                            example: '2025-12-25T14:30:00Z'
+                        },
+                        duration_m: {
+                            type: 'integer',
+                            description: 'Durée du service en minutes.',
+                            example: 60
+                        },
+                        location_id: {
+                            type: 'integer',
+                            description: 'ID de la localité (obligatoire).',
+                            example: 1
+                        },
+                        dog_id: {
+                            type: 'integer',
+                            description: 'ID du chien (obligatoire).',
+                            example: 5
+                        },
+                    },
+                    required: ['location_id', 'dog_id'],
+                },
             },
         },
         paths: {
@@ -335,6 +393,250 @@ const options = {
                                             error: {
                                                 type: 'string',
                                                 example: 'La localité avec l\'ID 123 n\'existe pas...'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        '500': {
+                            description: 'Erreur interne du serveur ou échec de la suppression.'
+                        },
+                    },
+                },
+            },
+            '/service': {
+                get: {
+                    tags: ['Service'],
+                    summary: 'Récupérer une liste de services ou filtrer par critères',
+                    operationId: 'getService',
+                    parameters: [{
+                        name: 'id',
+                        in: 'query',
+                        schema: {
+                            type: 'integer'
+                        },
+                        description: 'Filtrer par ID du service.'
+                    }, {
+                        name: 'date',
+                        in: 'query',
+                        schema: {
+                            type: 'string',
+                            format: 'date-time'
+                        },
+                        description: 'Filtrer par date du service.'
+                    }, {
+                        name: 'duration_m',
+                        in: 'query',
+                        schema: {
+                            type: 'integer'
+                        },
+                        description: 'Filtrer par durée du service en minutes.'
+                    }, {
+                        name: 'location',
+                        in: 'query',
+                        schema: {
+                            type: 'string'
+                        },
+                        description: 'Filtrer par nom de la localité.'
+                    }, {
+                        name: 'dog',
+                        in: 'query',
+                        schema: {
+                            type: 'string'
+                        },
+                        description: 'Filtrer par nom du chien.'
+                    }, ],
+                    responses: {
+                        '200': {
+                            description: 'Récupération réussie des services.',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        type: 'object',
+                                        properties: {
+                                            message: {
+                                                type: 'string',
+                                                example: 'Le ou les services ont bien été récupéré.s !'
+                                            },
+                                            body: {
+                                                type: 'array',
+                                                items: {
+                                                    $ref: '#/components/schemas/Service'
+                                                }
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        '500': {
+                            description: 'Erreur interne du serveur.'
+                        },
+                    },
+                },
+            },
+            '/service/create': {
+                post: {
+                    tags: ['Service'],
+                    summary: 'Créer un nouveau service',
+                    operationId: 'createService',
+                    requestBody: {
+                        required: true,
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ServiceInput'
+                                }
+                            },
+                        },
+                    },
+                    responses: {
+                        '200': {
+                            description: 'Service créé avec succès.',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        type: 'object',
+                                        properties: {
+                                            message: {
+                                                type: 'string',
+                                                example: 'Le service a bien été créé !'
+                                            },
+                                            body: {
+                                                $ref: '#/components/schemas/Service'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        '400': {
+                            description: 'Champs obligatoires manquants.',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        type: 'object',
+                                        properties: {
+                                            error: {
+                                                type: 'string',
+                                                example: "Les champs 'location_id' et 'dog_id' sont obligatoires."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        '500': {
+                            description: 'Erreur interne du serveur ou échec de la création.'
+                        },
+                    },
+                },
+            },
+            '/service/{id}/update': {
+                patch: {
+                    tags: ['Service'],
+                    summary: 'Mettre à jour un service existant par ID',
+                    operationId: 'updateService',
+                    parameters: [{
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: {
+                            type: 'integer'
+                        },
+                        description: 'L\'ID du service à mettre à jour.'
+                    }, ],
+                    requestBody: {
+                        required: true,
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/ServiceInput'
+                                },
+                            },
+                        },
+                    },
+                    responses: {
+                        '200': {
+                            description: 'Service mis à jour avec succès.',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        type: 'object',
+                                        properties: {
+                                            message: {
+                                                type: 'string',
+                                                example: 'Le service a bien été mis à jour !'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        '404': {
+                            description: 'Le service avec cet ID n\'existe pas.',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        type: 'object',
+                                        properties: {
+                                            error: {
+                                                type: 'string',
+                                                example: 'Service non trouvée'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        '500': {
+                            description: 'Erreur interne du serveur ou échec de la mise à jour.'
+                        },
+                    },
+                },
+            },
+            '/service/{id}/delete': {
+                delete: {
+                    tags: ['Service'],
+                    summary: 'Supprimer un service par ID',
+                    operationId: 'deleteService',
+                    parameters: [{
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: {
+                            type: 'integer'
+                        },
+                        description: 'L\'ID du service à supprimer.'
+                    }, ],
+                    responses: {
+                        '200': {
+                            description: 'Service supprimé avec succès.',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        type: 'object',
+                                        properties: {
+                                            message: {
+                                                type: 'string',
+                                                example: 'Le service a bien été supprimé !'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        '404': {
+                            description: 'Le service avec cet ID n\'existe pas.',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        type: 'object',
+                                        properties: {
+                                            error: {
+                                                type: 'string',
+                                                example: 'Service non trouvée'
                                             }
                                         }
                                     }
