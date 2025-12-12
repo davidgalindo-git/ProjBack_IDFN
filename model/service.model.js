@@ -24,6 +24,12 @@ const serviceModel = {
             let params = [];
 
             if (filters.id) {
+
+                //if (filters.id === ""){
+                //    let error = "L'id ne peut pas être nul"
+                //    return error;
+                //}
+
                 sql += " AND services.id = ?";
                 params.push(filters.id);
             }
