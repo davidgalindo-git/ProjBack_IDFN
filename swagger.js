@@ -98,15 +98,15 @@ const options = {
                             description: 'Durée du service en minutes.',
                             example: 60
                         },
-                        location_id: {
-                            type: 'integer',
-                            description: 'ID de la localité où le service a eu lieu.',
-                            example: 1
+                        location: {
+                            type: 'string',
+                            description: 'Nom de la localité où le service a eu lieu.',
+                            example: "Clinic Lausanne"
                         },
-                        dog_id: {
-                            type: 'integer',
-                            description: 'ID du chien concerné par le service.',
-                            example: 5
+                        dog: {
+                            type: 'string',
+                            description: 'Nom du chien concerné par le service.',
+                            example: "Charlie"
                         },
                     },
                 },
@@ -464,6 +464,26 @@ const options = {
                                                 items: {
                                                     $ref: '#/components/schemas/Service'
                                                 }
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        '400': {
+                            description: 'Mauvaise requête.',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        type: 'object',
+                                        properties: {
+                                            message: {
+                                                type: 'string',
+                                                example: "Il manque l'information..."
+                                            },
+                                            body: {
+                                                type: 'string',
+                                                example: 'localhost:{$PORT}/service?id='
                                             },
                                         },
                                     },

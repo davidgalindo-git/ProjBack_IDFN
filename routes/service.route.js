@@ -32,9 +32,9 @@ serviceRouter.post('/create', async (req, res) => {
         const {date, duration_m, location_id, dog_id} = req.body;
         console.log("route.body", date, duration_m, location_id, dog_id) //success
         // Validate required fields
-        if (!location_id || !dog_id) {
+        if (!date || !duration_m || !location_id || !dog_id) {
           return res.status(400).json({
-            error: "Les champs 'location_id' et 'dog_id' sont obligatoires.",
+            error: "Les champs 'date', 'duration_m', 'location_id' et 'dog_id' sont obligatoires.",
           });
         }
 
