@@ -126,6 +126,24 @@ const serviceModel = {
             } finally {
                await db.disconnectToDB(con);
             }
+        },
+    deleteService: async (id) => {
+        let con
+        try {
+            console.log("model.params", id);
+            con = await db.connectToDB();
+
+            let sql = `DELETE FROM services WHERE id = ?`;
+
+            const [result] = con.query(sql, [id]);
+            console.log("model.res", result)
+            return {affectedRows: result.affectedRows, id};
+        } catch (error){
+            console.log("Error updating service:", error);
+            throw error;
+        } finally {
+            await db.disconnectToDB(con);
         }
+    }
 }
 export default serviceModel;
