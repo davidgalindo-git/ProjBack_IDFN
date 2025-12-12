@@ -124,7 +124,6 @@ CREATE TABLE IF NOT EXISTS `WhatTheDog`.`locations` (
   `canton_code` VARCHAR(2) NULL,
   `language_code` VARCHAR(3) NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `canton_code_UNIQUE` (`canton_code` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
