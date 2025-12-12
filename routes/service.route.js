@@ -6,15 +6,19 @@ serviceRouter.use(express.json());
 
 serviceRouter.get('/', async (req, res) => {
     try {
+        let message;
         const filters = req.query;
-
         console.log("route.query", filters) //success
+        if (filters.id === "" || filters.date === "" || filters.duration_m === "" || filters.location === "" || filters.dog === "" ) {
+            message = `Il manque l'information...`;
+            return res.status(400).json({error: message});
+        }
 
         const services = await serviceService.getService(filters);
 
         console.log("route.res", services) //success
 
-        let message = `Le ou les services ont bien été récupéré.s !`;
+        message = `Le ou les services ont bien été récupéré.s !`;
         res.status(200).json({message: message, body: services});
 
     } catch (error) {
