@@ -146,8 +146,8 @@ WHERE 1=1
 
             await con.query(sql, params);
 
-            return { id, ...dog };
-
+            const [rows] = await con.query("SELECT * FROM dogs WHERE id = ?", [id]);
+            return rows[0];
         } finally {
             await db.disconnectToDB(con);
         }
