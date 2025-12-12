@@ -135,7 +135,7 @@ const serviceModel = {
 
             let sql = `DELETE FROM services WHERE id = ?`;
 
-            const [result] = con.query(sql, [id]);
+            const [result] = await con.query(sql, id);
             console.log("model.res", result)
             return {affectedRows: result.affectedRows, id};
         } catch (error){
