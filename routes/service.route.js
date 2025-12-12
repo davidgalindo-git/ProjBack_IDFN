@@ -73,7 +73,7 @@ serviceRouter.delete('/:id/delete', async (req, res) => {
         console.log("route.id", id) //success
 
         const resDeleteService = await serviceService.deleteService(id);
-        if (resDeleteService === 0) {
+        if (resDeleteService.affectedRows === 0) {
             res.status(404).json({error: "Service non trouvée"})
         } else {
             console.log("route.res", resDeleteService) //success
