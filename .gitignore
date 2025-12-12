@@ -1,6 +1,5 @@
 .idea
 node_modules
-.vs
 .env
 package-lock.json
 package.json
