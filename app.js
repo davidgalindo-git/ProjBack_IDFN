@@ -30,7 +30,7 @@ app.use((req, res, next) => {
     res.status(404).json({
         success: false,
         message: 'Route not found',
-        requestedUrl: req.originalUrl // Useful for debugging
+        requestedUrl: req.originalUrl
     });
 });
 
