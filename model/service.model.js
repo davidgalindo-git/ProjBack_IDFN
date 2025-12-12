@@ -139,7 +139,7 @@ const serviceModel = {
             console.log("model.res", result)
             return {affectedRows: result.affectedRows, id};
         } catch (error){
-            console.log("Error updating service:", error);
+            console.log("Error deleting service:", error);
             throw error;
         } finally {
             await db.disconnectToDB(con);
