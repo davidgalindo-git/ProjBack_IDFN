@@ -24,6 +24,16 @@ app.use('/client', clientRouter);
 // Dogs route
 app.use('/dogs', dogsRouter);
 
+// If none of the routes above are matched, raise status 404
+app.use((req, res, next) => {
+    // Set the HTTP status code to 404 (Not Found)
+    res.status(404).json({
+        success: false,
+        message: 'Route not found',
+        requestedUrl: req.originalUrl // Useful for debugging
+    });
+});
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
