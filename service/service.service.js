@@ -32,6 +32,17 @@ const serviceService = {
             console.log("Error updating service[service]:", error);
             throw error;
         }
+    },
+
+    deleteService: async (id) => {
+        try {
+            console.log("service.params", id)
+            const deleteService = await serviceModel.deleteService(id);
+            return deleteService;
+        } catch (error) {
+            console.log("Error deleting service[service]:", error);
+            throw error;
+        }
     }
 }
 
