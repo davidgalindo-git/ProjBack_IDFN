@@ -84,17 +84,40 @@ const serviceModel = {
             try{
                 console.log("model.params", id, date, duration_m, location_id, dog_id) //success
                 con = await db.connectToDB();
-                let sql=`
-                UPDATE
-                services
-                SET
-                date = ?,
-                duration_m = ?,
-                location_id = ?,
-                dog_id = ?
-                WHERE id = ?
-                `
-                const [result] = await con.query(sql, [date, duration_m, location_id, dog_id, id]);
+
+                let setClauses = [];
+                let values = [];
+
+                if (date){
+                    setClauses.push("date = ?");
+                    values.push(date);
+                    }
+
+                if (duration_m){
+                    setClauses.push("duration_m = ?");
+                    values.push(duration_m);
+                    }
+
+                if (location_id){
+                    setClauses.push("location_id = ?");
+                    values.push(location_id);
+                    }
+
+                if (dog_id){
+                    setClauses.push("dog_id = ?");
+                    values.push(dog_id);
+                    }
+
+                // Check if no clause is given
+                if (setClauses.length === 0) {
+                    console.log("No fields provided for update.");
+                    return {affectedRows: 0, id};
+                }
+                values.push(id)
+                let sql = `UPDATE services SET ${setClauses.join(", ")} WHERE id = ?`;
+
+                console.log("model.values", values) //success
+                const [result] = await con.query(sql, values);
                 console.log("model.res", result) //success
                 return {affectedRows: result.affectedRows, id, date, duration_m, location_id, dog_id};
             } catch (error) {

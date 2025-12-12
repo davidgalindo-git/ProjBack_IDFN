@@ -1,10 +1,10 @@
 import express from 'express';
 import serviceService from "../service/service.service.js";
 
-const router = express.Router();
-router.use(express.json());
+const serviceRouter = express.Router();
+serviceRouter.use(express.json());
 
-router.get('/', async (req, res) => {
+serviceRouter.get('/', async (req, res) => {
     try {
         const filters = req.query;
 
@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
 
 });
 
-router.post('/create', async (req, res) => {
+serviceRouter.post('/create', async (req, res) => {
     try {
         const {date, duration_m, location_id, dog_id} = req.body;
         console.log("route.body", date, duration_m, location_id, dog_id) //success
@@ -46,7 +46,7 @@ router.post('/create', async (req, res) => {
 
 });
 
-router.patch('/:id/update', async (req, res) => {
+serviceRouter.patch('/:id/update', async (req, res) => {
     try {
         const id = parseInt(req.params.id)
         console.log("route.id", id) //success
@@ -67,4 +67,4 @@ router.patch('/:id/update', async (req, res) => {
 
 });
 
-export default router;
+export default serviceRouter;
