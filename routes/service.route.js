@@ -70,12 +70,13 @@ serviceRouter.patch('/:id/update', async (req, res) => {
 serviceRouter.delete('/:id/delete', async (req, res) => {
     try {
         const id = parseInt(req.params.id)
-        console.log("route.id", id) //
+        console.log("route.id", id) //success
+
         const resDeleteService = await serviceService.deleteService(id);
         if (resDeleteService === 0) {
             res.status(404).json({error: "Service non trouvée"})
         } else {
-            console.log("route.res", resDeleteService) //
+            console.log("route.res", resDeleteService) //success
             let message = `Le service a bien été supprimé !`;
             res.status(200).json({message: message, body: resDeleteService});
         }
