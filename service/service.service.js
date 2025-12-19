@@ -5,6 +5,21 @@ let message;
 const serviceService = {
     getServices: async (filters = {}) => {
         console.log("service.params", filters) //success
+        /// Allowed keys
+        const allowedKeys = ['date', 'duration_m', 'location', 'dog'];
+
+        /// Keys sent by the user
+        const actualKeys = Object.keys(filters);
+
+        // Check if any key is NOT in the allowed list
+        const forbiddenKeys = actualKeys.filter(key => !allowedKeys.includes(key));
+
+        if (forbiddenKeys.length > 0) {
+            const error = new Error(`Paramètre(s) non autorisé(s) : ${forbiddenKeys.join(', ')}`);
+            error.status = 400;
+            throw error;
+        }
+
         const { date, duration_m, location, dog } = filters;
 
         /// Check non empty parameters
