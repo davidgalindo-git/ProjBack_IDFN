@@ -5,10 +5,10 @@ let message;
 const serviceService = {
     getService: async (filters = {}) => {
         console.log("service.params", filters) //success
-        const { id, date, duration_m, location, dog } = filters;
+        const { date, duration_m, location, dog } = filters;
 
         /// Check non empty parameters
-        if (id === "" || date === "" || duration_m === "" || location === "" || dog === "" ) {
+        if (date === "" || duration_m === "" || location === "" || dog === "" ) {
             message = `Il manque l'information...`;
             const error = new Error(message);
             error.status = 400;
@@ -16,8 +16,8 @@ const serviceService = {
             throw error;
         }
 
-        /// Validate id and duration_m int format
-        if ((id && isNaN(parseInt(id))) || (duration_m && isNaN(parseInt(duration_m)))) {
+        /// Validate duration_m int format
+        if (duration_m && isNaN(parseInt(duration_m))) {
             message = 'Format de donnée incorrect, le paramètre doit être un nombre entier'
             const error = new Error(message);
             error.status = 400;
