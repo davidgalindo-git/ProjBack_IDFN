@@ -5,7 +5,10 @@ let message;
 const serviceService = {
     getService: async (filters = {}) => {
         console.log("service.params", filters) //success
-        if (filters.id === "" || filters.date === "" || filters.duration_m === "" || filters.location === "" || filters.dog === "" ) {
+        const { id, date, duration_m, location, dog } = filters;
+
+        /// Check non empty parameters
+        if (id === "" || date === "" || duration_m === "" || location === "" || dog === "" ) {
             message = `Il manque l'information...`;
             const error = new Error(message);
             error.status = 400;
@@ -13,8 +16,70 @@ const serviceService = {
             throw error;
         }
 
+        /// Validate id and duration_m int format
+        if ((id && isNaN(parseInt(id))) || (duration_m && isNaN(parseInt(duration_m)))) {
+            message = 'Format de donnée incorrect, le paramètre doit être un nombre entier'
+            const error = new Error(message);
+            error.status = 400;
+            console.log(error);
+            throw error;
+        }
+
+        /// Validate date format "yyyy-mm-dd hh:mm:ss"
+        if (date) {
+            const dateRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+            if (!dateRegex.test(date)) {
+                message = "Le format de date doit être yyyy-mm-dd hh:mm:ss";
+                const error = new Error(message);
+                error.status = 400;
+                console.log(error);
+                throw error;
+            }
+        }
+
+        /// Regex: ^ (start), [a-zA-Z\s] (letters or spaces), + (one or more), $ (end)
+        const alphabetRegex = /^[a-zA-Z\s]+$/;
+
+        /// Validate Location
+        if (location) {
+            if (typeof location !== 'string' || location.trim() === "") {
+                message = "La localité doit être une chaîne de caractères";
+                const error = new Error(message);
+                error.status = 400;
+                console.log(error);
+                throw error;
+            }
+            if (!alphabetRegex.test(location)) {
+                message = "La localité ne doit contenir que des lettres et des espaces";
+                const error = new Error(message);
+                error.status = 400;
+                console.log(error);
+                throw error;
+            }
+        }
+
+        /// Validate Dog
+        if (dog) {
+            if (typeof dog !== 'string' || dog.trim() === "") {
+                message = "Le nom du chien doit être une chaîne de caractères";
+                const error = new Error(message);
+                error.status = 400;
+                console.log(error);
+                throw error;
+            }
+            if (!alphabetRegex.test(dog)) {
+                message = "Le nom du chien ne doit contenir que des lettres et des espaces";
+                const error = new Error(message);
+                error.status = 400;
+                console.log(error);
+                throw error;
+            }
+        }
+
         try {
             const service = await serviceModel.selectService(filters);
+
+            /// Check no service found
             if (!service || (Array.isArray(service) && service.length === 0) || service.affectedRows === 0) {
                 message = "Service non trouvée";
                 const error = new Error(message);
@@ -22,7 +87,7 @@ const serviceService = {
                 console.log(error);
                 throw error;
             }
-            console.log(service);
+
             return service;
         } catch (error) {
             console.log("Error fetching service[service]:", error);
@@ -32,6 +97,7 @@ const serviceService = {
 
     postService: async (date, duration_m, location_id, dog_id) => {
         console.log("service.params", date, duration_m, location_id, dog_id); //success
+
         // Validate required fields
         if (!date || !duration_m || !location_id || !dog_id) {
             message = "Les champs 'date', 'duration_m', 'location_id' et 'dog_id' sont obligatoires.";
@@ -46,7 +112,6 @@ const serviceService = {
             return newService;
         } catch (error) {
             console.log("Error fetching service[service]:", error);
-            error.status = 500;
             throw error;
         }
     },
@@ -56,6 +121,7 @@ const serviceService = {
         try {
             const newService = await serviceModel.updateService(id, {date, duration_m, location_id, dog_id});
 
+            /// Check no service found
             if (newService.affectedRows === 0) {
                 message = "Service non trouvée";
                 const error = new Error(message);
@@ -76,6 +142,7 @@ const serviceService = {
         try {
             const deleteService = await serviceModel.deleteService(id);
 
+            /// Check no service found
             if (deleteService.affectedRows === 0) {
                 message = "Service non trouvée";
                 const error = new Error(message);
