@@ -492,6 +492,22 @@ const options = {
                                 },
                             },
                         },
+                        '404': {
+                            description: 'Le service avec ce ou ces paramètres n\'existe pas.',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        type: 'object',
+                                        properties: {
+                                            error: {
+                                                type: 'string',
+                                                example: 'Service non trouvée'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         '500': {
                             description: 'Erreur interne du serveur.'
                         },

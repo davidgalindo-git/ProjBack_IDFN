@@ -15,10 +15,17 @@ const serviceService = {
 
         try {
             const service = await serviceModel.selectService(filters);
+            if (!service || (Array.isArray(service) && service.length === 0) || service.affectedRows === 0) {
+                message = "Service non trouvée";
+                const error = new Error(message);
+                error.status = 404;
+                console.log(error);
+                throw error;
+            }
+            console.log(service);
             return service;
         } catch (error) {
             console.log("Error fetching service[service]:", error);
-            error.status = 500;
             throw error;
         }
     },
