@@ -4,85 +4,96 @@ import serviceService from "../service/service.service.js";
 const serviceRouter = express.Router();
 serviceRouter.use(express.json());
 
+let message;
+
 serviceRouter.get('/', async (req, res) => {
     try {
         const filters = req.query;
-
         console.log("route.query", filters) //success
 
-        const services = await serviceService.getService(filters);
-
+        const services = await serviceService.getServices(filters);
         console.log("route.res", services) //success
 
-        let message = `Le ou les services ont bien été récupéré.s !`;
+        message = `Le ou les services ont bien été récupéré.s !`;
         res.status(200).json({message: message, body: services});
 
     } catch (error) {
-        res.status(500).json({error: error.message});
+        const errorCode = error.status ? error.status : 500;
+        res.status(errorCode).json({ error: error.message });
     }
-
 });
 
-serviceRouter.post('/create', async (req, res) => {
+serviceRouter.get('/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        console.log("route.query", id) //success
+
+        const services = await serviceService.getServiceById(id);
+        console.log("route.res", services) //success
+
+        message = `Le ou les services ont bien été récupéré.s !`;
+        res.status(200).json({message: message, body: services});
+
+    } catch (error) {
+        const errorCode = error.status ? error.status : 500;
+        res.status(errorCode).json({ error: error.message });
+    }
+});
+
+serviceRouter.post('/', async (req, res) => {
     try {
         const {date, duration_m, location_id, dog_id} = req.body;
         console.log("route.body", date, duration_m, location_id, dog_id) //success
-        // Validate required fields
-        if (!location_id || !dog_id) {
-          return res.status(400).json({
-            error: "Les champs 'location_id' et 'dog_id' sont obligatoires.",
-          });
-        }
 
         const newService = await serviceService.postService(date, duration_m, location_id, dog_id);
-
         console.log("route.res", newService) //success
-        let message = `Le service a bien été créé !`;
+
+        message = `Le service a bien été créé !`;
         res.status(200).json({message: message, body: newService});
 
     } catch (error) {
-        res.status(500).json({error: error.message});
+        const errorCode = error.status ? error.status : 500;
+        res.status(errorCode).json({ error: error.message });
     }
-
 });
 
-serviceRouter.patch('/:id/update', async (req, res) => {
+serviceRouter.patch('/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id)
         console.log("route.id", id) //success
+
         const {date, duration_m, location_id, dog_id} = req.body;
         console.log("route.body", date, duration_m, location_id, dog_id) //success
+
         const resUpdateService = await serviceService.patchService(id, {date, duration_m, location_id, dog_id});
-        if (resUpdateService === 0) {
-            res.status(404).json({error: "Service non trouvée"})
-        } else {
-            console.log("route.res", resUpdateService) //success
-            let message = `Le service a bien été mis à jour !`;
-            res.status(200).json({message: message, body: resUpdateService});
-        }
+        console.log("route.res", resUpdateService) //success
+
+        message = `Le service a bien été mis à jour !`;
+        res.status(200).json({message: message, body: resUpdateService});
+
 
     } catch (error) {
-        res.status(500).json({error: error.message});
+        const errorCode = error.status ? error.status : 500;
+        res.status(errorCode).json({ error: error.message });
     }
 
 });
 
-serviceRouter.delete('/:id/delete', async (req, res) => {
+serviceRouter.delete('/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id)
         console.log("route.id", id) //success
 
         const resDeleteService = await serviceService.deleteService(id);
-        if (resDeleteService.affectedRows === 0) {
-            res.status(404).json({error: "Service non trouvée"})
-        } else {
-            console.log("route.res", resDeleteService) //success
-            let message = `Le service a bien été supprimé !`;
-            res.status(200).json({message: message, body: resDeleteService});
-        }
+        console.log("route.res", resDeleteService) //success
+
+        message = `Le service a bien été supprimé !`;
+        res.status(200).json({message: message, body: resDeleteService});
+
 
     } catch (error) {
-        res.status(500).json({error: error.message});
+        const errorCode = error.status ? error.status : 500;
+        res.status(errorCode).json({ error: error.message });
     }
 
 });
