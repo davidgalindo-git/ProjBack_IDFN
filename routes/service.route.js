@@ -9,10 +9,6 @@ serviceRouter.get('/', async (req, res) => {
         let message;
         const filters = req.query;
         console.log("route.query", filters) //success
-        if (filters.id === "" || filters.date === "" || filters.duration_m === "" || filters.location === "" || filters.dog === "" ) {
-            message = `Il manque l'information...`;
-            return res.status(400).json({error: message});
-        }
 
         const services = await serviceService.getService(filters);
 
@@ -22,7 +18,7 @@ serviceRouter.get('/', async (req, res) => {
         res.status(200).json({message: message, body: services});
 
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.status(error.status).json({error: error.message});
     }
 
 });
@@ -31,21 +27,15 @@ serviceRouter.post('/create', async (req, res) => {
     try {
         const {date, duration_m, location_id, dog_id} = req.body;
         console.log("route.body", date, duration_m, location_id, dog_id) //success
-        // Validate required fields
-        if (!date || !duration_m || !location_id || !dog_id) {
-          return res.status(400).json({
-            error: "Les champs 'date', 'duration_m', 'location_id' et 'dog_id' sont obligatoires.",
-          });
-        }
 
         const newService = await serviceService.postService(date, duration_m, location_id, dog_id);
-
         console.log("route.res", newService) //success
+
         let message = `Le service a bien été créé !`;
         res.status(200).json({message: message, body: newService});
 
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.status(error.status).json({error: error.message});
     }
 
 });
@@ -54,19 +44,20 @@ serviceRouter.patch('/:id/update', async (req, res) => {
     try {
         const id = parseInt(req.params.id)
         console.log("route.id", id) //success
+
         const {date, duration_m, location_id, dog_id} = req.body;
         console.log("route.body", date, duration_m, location_id, dog_id) //success
+
         const resUpdateService = await serviceService.patchService(id, {date, duration_m, location_id, dog_id});
-        if (resUpdateService === 0) {
-            res.status(404).json({error: "Service non trouvée"})
-        } else {
-            console.log("route.res", resUpdateService) //success
-            let message = `Le service a bien été mis à jour !`;
-            res.status(200).json({message: message, body: resUpdateService});
-        }
+        console.log("route.res", resUpdateService) //success
+
+        let message = `Le service a bien été mis à jour !`;
+        res.status(200).json({message: message, body: resUpdateService});
+
 
     } catch (error) {
-        res.status(500).json({error: error.message});
+        const errorCode = error.status ? error.status : 500;
+        res.status(errorCode).json({ error: error.message });
     }
 
 });
@@ -77,16 +68,15 @@ serviceRouter.delete('/:id/delete', async (req, res) => {
         console.log("route.id", id) //success
 
         const resDeleteService = await serviceService.deleteService(id);
-        if (resDeleteService.affectedRows === 0) {
-            res.status(404).json({error: "Service non trouvée"})
-        } else {
-            console.log("route.res", resDeleteService) //success
-            let message = `Le service a bien été supprimé !`;
-            res.status(200).json({message: message, body: resDeleteService});
-        }
+        console.log("route.res", resDeleteService) //success
+
+        let message = `Le service a bien été supprimé !`;
+        res.status(200).json({message: message, body: resDeleteService});
+
 
     } catch (error) {
-        res.status(500).json({error: error.message});
+        const errorCode = error.status ? error.status : 500;
+        res.status(errorCode).json({ error: error.message });
     }
 
 });
