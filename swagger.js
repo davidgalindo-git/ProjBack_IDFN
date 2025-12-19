@@ -485,7 +485,7 @@ const options = {
                                             },
                                             body: {
                                                 type: 'string',
-                                                example: 'localhost:{$PORT}/service?id='
+                                                example: `http://localhost:${port}/service?id=`
                                             },
                                         },
                                     },
