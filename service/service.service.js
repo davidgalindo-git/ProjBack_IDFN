@@ -3,7 +3,7 @@ import serviceModel from '../model/service.model.js';
 let message;
 
 const serviceService = {
-    getService: async (filters = {}) => {
+    getServices: async (filters = {}) => {
         console.log("service.params", filters) //success
         const { date, duration_m, location, dog } = filters;
 
@@ -77,7 +77,7 @@ const serviceService = {
         }
 
         try {
-            const service = await serviceModel.selectService(filters);
+            const service = await serviceModel.selectServices(filters);
 
             /// Check no service found
             if (!service || (Array.isArray(service) && service.length === 0) || service.affectedRows === 0) {
@@ -90,6 +90,27 @@ const serviceService = {
 
             return service;
         } catch (error) {
+            console.log("Error fetching service[service]:", error);
+            throw error;
+        }
+    },
+
+    getServiceById: async (id) => {
+        try {
+            const service = await serviceModel.selectServiceById(id);
+
+            /// Check no service found
+            if (!service || (Array.isArray(service) && service.length === 0) || service.affectedRows === 0) {
+                message = "Service non trouvée";
+                const error = new Error(message);
+                error.status = 404;
+                console.log(error);
+                throw error;
+            }
+
+            return service;
+        } catch (error)
+        {
             console.log("Error fetching service[service]:", error);
             throw error;
         }

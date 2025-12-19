@@ -11,7 +11,7 @@ serviceRouter.get('/', async (req, res) => {
         const filters = req.query;
         console.log("route.query", filters) //success
 
-        const services = await serviceService.getService(filters);
+        const services = await serviceService.getServices(filters);
         console.log("route.res", services) //success
 
         message = `Le ou les services ont bien été récupéré.s !`;
@@ -26,10 +26,9 @@ serviceRouter.get('/', async (req, res) => {
 serviceRouter.get('/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const filters = { ...req.query, id: id };
-        console.log("route.query", filters) //success
+        console.log("route.query", id) //success
 
-        const services = await serviceService.getService(filters);
+        const services = await serviceService.getServiceById(id);
         console.log("route.res", services) //success
 
         message = `Le ou les services ont bien été récupéré.s !`;

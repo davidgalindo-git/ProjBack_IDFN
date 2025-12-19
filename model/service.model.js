@@ -2,7 +2,7 @@ import mysql from 'mysql2/promise';
 import { db } from '../db/db.js';
 
 const serviceModel = {
-    selectService: async (filters = {}) => {
+    selectServices: async (filters = {}) => {
         let con;
         try {
             console.log("model.params", filters) //success
@@ -64,6 +64,43 @@ const serviceModel = {
             await db.disconnectToDB(con);
         }
     },
+
+    selectServiceById: async (id) => {
+        let con;
+        try {
+            console.log("model.params", id) //success
+            con = await db.connectToDB()
+
+            let sql = `
+                SELECT 
+                    services.id, 
+                    services.date, 
+                    services.duration_m, 
+                    locations.name AS location, 
+                    dogs.name AS dog
+                FROM services
+                INNER JOIN locations ON services.location_id = locations.id
+                INNER JOIN dogs ON services.dog_id = dogs.id
+                WHERE services.id = ?
+            `;
+
+            let params = [];
+
+            if (id){
+                params.push(id);
+            }
+
+            const rows = await con.query(sql, params);
+            console.log("model.res", rows) //success
+            return rows[0];
+        } catch (error) {
+            console.log("Error creating service:", error);
+            throw error;
+        } finally {
+            await db.disconnectToDB(con);
+        }
+    },
+
     createService: async (date, duration_m, location_id, dog_id) => {
             let con;
             try {
