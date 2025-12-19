@@ -3,18 +3,36 @@ import localityModel from '../model/locality.model.js';
 
 const localityService = {
     getLocality: async (filters) => {
-        const {name, postal_code, postal_code_complement, toponym, canton_code, language_code} = filters;
+        const {id, name, postal_code, postal_code_complement, toponym, canton_code, language_code} = filters;
 
-        if (name === "" || postal_code === "" || postal_code_complement === "" || toponym === "" || canton_code === "" || language_code === ""){
-            throw Error("Il manque une information...");
+        if (id !== undefined) {
+            if (isNaN(id) || !await localityModel.isIdValid(id)){
+                const err = new Error("L'ID n'est pas valide.")
+                err.status = 400;
+                throw err;
+            }
         }
 
-        try {
-            return localityModel.getLocality(filters);
+        if (id === "" || name === "" || postal_code === "" || postal_code_complement === "" || toponym === "" || canton_code === "" || language_code === ""){
+            const err = new Error("Il manque une information...");
+            err.status = 400;
+            throw err;
+        }
 
+        let locality;
+        try {
+            locality = await localityModel.getLocality(filters);
         } catch (error) {
             throw error;
         }
+
+        if (locality.length === 0) {
+            const err = new Error(`Aucune localité n'a été trouvé`);
+            err.status = 404;
+            throw err;
+        }
+
+        return locality;
     },
     setLocality: async (filters) => {
         const {name, postal_code, postal_code_complement, toponym, canton_code, language_code} = filters;
@@ -53,37 +71,64 @@ const localityService = {
             throw err;
         }
 
+        let locality;
         try {
-            return await localityModel.postLocality(filters);
+            locality = await localityModel.postLocality(filters);
         } catch (error) {
             throw error;
         }
+
+        if (locality < 1) {
+            const err = new Error(`Erreur dans l'ajout de la localité.`);
+            err.status = 500;
+            throw err;
+        }
+
+        return locality
     },
     updateLocality: async (id, filters) => {
-        if (await localityModel.isIdValid(id)) {
-            try {
-                return await localityModel.patchLocality(id, filters);
-            } catch (error) {
-                throw error;
-            }
-        } else {
-            const err = new Error(`L'ID de la localité n'existe pas.`);
-            err.status = 404;
+        if (!await localityModel.isIdValid(id)){
+            const err = new Error("L'ID n'est pas valide.")
+            err.status = 400;
             throw err;
         }
+
+        let locality;
+        try {
+            locality = await localityModel.patchLocality(id, filters);
+        } catch (error) {
+            throw error;
+        }
+
+        if (locality.length < 1) {
+            const err = new Error(`Erreur dans la mise à jour de la localité avec l'ID ${id}`);
+            err.status = 500;
+            throw err;
+        }
+
+        return locality;
     },
     deleteLocality: async (id) => {
-        if (await localityModel.isIdValid(id)) {
-            try {
-                return await localityModel.deleteLocality(id);
-            } catch (error) {
-                throw error;
-            }
-        } else {
-            const err = new Error(`L'ID de la localité n'existe pas.`);
-            err.status = 404;
+        if (!await localityModel.isIdValid(id)){
+            const err = new Error("L'ID n'est pas valide.")
+            err.status = 400;
             throw err;
         }
+
+        let locality;
+        try {
+            locality = await localityModel.deleteLocality(id);
+        } catch (error) {
+            throw error;
+        }
+
+        if (locality < 1) {
+            const err = new Error(`Erreur dans la suppression de la localité avec l'ID ${id}`);
+            err.status = 500;
+            throw err;
+        }
+
+        return locality;
     }
 }
 

@@ -9,6 +9,10 @@ const localityModel = {
             let sql = "SELECT * FROM locations WHERE 1=1";
             let params = [];
 
+            if (filters.id) {
+                sql += " AND id = ?";
+                params.push(filters.id);
+            }
             if (filters.name) {
                 sql += " AND name LIKE ?";
                 params.push(`%${filters.name}%`);
