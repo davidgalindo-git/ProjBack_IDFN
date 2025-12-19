@@ -3,6 +3,15 @@ import localityModel from '../model/locality.model.js';
 
 const localityService = {
     getLocality: async (filters) => {
+        const authorizedFilters = ['id', 'name', 'postal_code', 'postal_code_complement', 'toponym', 'canton_code', 'language_code'];
+        for (let filter in filters) {
+            if (!authorizedFilters.find(element => element === filter)) {
+                const err = new Error(`Le filtre ${filter} n'est pas autorisé.`);
+                err.status = 400;
+                throw err;
+            }
+        }
+
         const {id, name, postal_code, postal_code_complement, toponym, canton_code, language_code} = filters;
 
         if (id !== undefined) {
