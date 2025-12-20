@@ -9,12 +9,12 @@ router.get('/', async (req, res) => {
         try {
             let client = await clientService.getClient({
                 id: req.query.id,
-                lastname: req.query.lastname,
-                firstname: req.query.firstname,
-                genre: req.query.genre,
-                email: req.query.email,
-                phone_number: req.query.phone_number,
-                address: req.query.address
+                lastname: req.query.lastname === undefined ? null : req.body.lastname,
+                firstname: req.query.firstname === undefined ? null : req.body.firstname,
+                genre: req.query.genre === undefined ? null : req.body.genre,
+                email: req.query.email === undefined ? null : req.body.email,
+                phone_number: req.query.phone_number === undefined ? null : req.body.phone_number,
+                address: req.query.address === undefined ? null : req.body.address
             });
             res.json({ body: client});
         } catch (error) {
@@ -27,12 +27,12 @@ router.post('/', async (req, res) => {
     if (req.body) {
         try {
             let client = await clientService.createClient({
-                lastname: req.body.lastname,
-                firstname: req.body.firstname,
-                genre: req.body.genre,
-                email: req.body.email,
-                phone_number: req.body.phone_number,
-                address: req.body.address
+                lastname: req.body.lastname === undefined ? null : req.body.lastname,
+                firstname: req.body.firstname === undefined ? null : req.body.firstname,
+                genre: req.body.genre === undefined ? null : req.body.genre,
+                email: req.body.email === undefined ? null : req.body.email,
+                phone_number: req.body.phone_number === undefined ? null : req.body.phone_number,
+                address: req.body.address === undefined ? null : req.body.address
             });
             res.json({ body: client});
         } catch (error) {
@@ -41,19 +41,19 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/', async (req, res) => {
+router.patch('/:id', async (req, res) => {
+    const id = parseInt(req.params.id)
     console.log("id:",req.body.lastname)
     if (req.body) {
         try {
-            let client = await clientService.createClient({
-                lastname: req.body.lastname,
-                firstname: req.body.firstname,
-                genre: req.body.genre,
-                email: req.body.email,
-                phone_number: req.body.phone_number,
-                address: req.body.address
+            let client = await clientService.updateClient(id,{
+                lastname: req.body.lastname === undefined ? null : req.body.lastname,
+                firstname: req.body.firstname === undefined ? null : req.body.firstname,
+                genre: req.body.genre === undefined ? null : req.body.genre,
+                email: req.body.email === undefined ? null : req.body.email,
+                phone_number: req.body.phone_number === undefined ? null : req.body.phone_number,
+                address: req.body.address === undefined ? null : req.body.address
             });
-            console.log("id:"+req.body.lastname)
             res.json({ body: client});
         } catch (error) {
             res.status(404).json({error: error.message});

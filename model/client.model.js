@@ -77,32 +77,45 @@ const clientModel = {
             await db.disconnectToDB(con);
         }
     },
-    updateClient: async (filters) => {
+    updateClient: async (id, filters) => {
         let con;
         try {
             con = await db.connectToDB();
-            if (!filters.lastname || filters.lastname.length === 0) {
-                filters.lastname = null;
+            let sql = "Update WhatTheDog.clients SET ";
+            const params = [];
+
+            if (filters.lastname) {
+                sql += "lastname = ?,";
+                params.push(filters.lastname);
             }
-            if (!filters.firstname || filters.firstname.length === 0) {
-                filters.firstname = null;
+            if (filters.firstname) {
+                sql += " firstname = ?";
+                params.push(filters.firstname);
             }
-            if (!filters.genre || filters.genre.length === 0) {
-                filters.genre = null;
+            if (filters.genre) {
+                sql += " genre = ?";
+                params.push(filters.genre);
             }
-            if (!filters.email || filters.email.length === 0) {
-                filters.email = null;
+            if (filters.email) {
+                sql += " email = ?";
+                params.push(filters.email);
             }
-            if (!filters.phone_number || filters.phone_number.length === 0) {
-                filters.phone_number = null;
+            if (filters.phone_number) {
+                sql += " phone_number = ?";
+                params.push(filters.phone_number);
             }
-            if (!filters.address || filters.address.length === 0) {
-                filters.address = null;
+            if (filters.address) {
+                sql += " address = ?";
+                params.push(filters.address);
             }
-            const [rows] = await con.query("INSERT INTO WhatTheDog.clients (lastname, firstname, genre, email, phone_number, address) VALUES (?, ?, ?, ?, ?, ?)", [filters.lastname, filters.firstname, filters.genre, filters.email, filters.phone_number, filters.address]);
+            if (id) {
+                sql += " WHERE id = ?";
+                params.push(`{id});
+            }
+            const [rows] = await con.query(sql, params);
             return rows;
         } catch (error) {
-            console.log("Error fetching client:", error);
+            console.log("Error updating client:", error);
             throw error;
         } finally {
             await db.disconnectToDB(con);
