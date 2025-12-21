@@ -5,6 +5,7 @@ const clientModel = {
         let con;
         try {
             con = await db.connectToDB()
+
             let sql = "SELECT * FROM clients WHERE 1=1"; //returns all clients if no parameters are added to the url
             let params = [];
 
@@ -110,13 +111,41 @@ const clientModel = {
             }
             if (id) {
                 sql += " WHERE id = ?";
-                params.push(`{id});
+                params.push(id);
             }
             const [rows] = await con.query(sql, params);
             return rows;
         } catch (error) {
             console.log("Error updating client:", error);
             throw error;
+        } finally {
+            await db.disconnectToDB(con);
+        }
+    },
+    deleteClient: async (id) => {
+        let con;
+        try {
+            con = await db.connectToDB();
+            const [rows_link] = await con.query('DELETE FROM dogs WHERE client_id = ?', id);
+
+            if (rows_link.affectedRows >= 1){
+                const [rows] = await con.query('DELETE FROM clients WHERE id = ?', id);
+                return rows.affectedRows;
+            }
+        } catch (error) {
+            throw SQLException;
+        } finally {
+            await db.disconnectToDB(con);
+        }
+    },
+    isIdValid: async (id) => {
+        let con;
+        try {
+            con = await db.connectToDB();
+            const rows = await con.query('SELECT * FROM clients WHERE id = ?', [id]);
+            return rows[0].length > 0;
+        } catch (error) {
+            throw SQLException;
         } finally {
             await db.disconnectToDB(con);
         }
