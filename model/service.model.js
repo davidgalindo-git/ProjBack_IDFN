@@ -130,13 +130,13 @@ const serviceModel = {
     deleteService: async (id) => {
         let con
         try {
-            console.log("model.params", id);
+            console.log("model.params", id); //success
             con = await db.connectToDB();
 
             let sql = `DELETE FROM services WHERE id = ?`;
 
             const [result] = await con.query(sql, id);
-            console.log("model.res", result)
+            console.log("model.res", result) //success
             return {affectedRows: result.affectedRows, id};
         } catch (error){
             console.log("Error deleting service:", error);

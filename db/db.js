@@ -8,6 +8,7 @@ const db = {
             password: process.env.PASSWORD,
             database: process.env.DATABASE
         })
+        console.log("Succesfully connected to database");
         return con;
     },
 

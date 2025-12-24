@@ -36,7 +36,7 @@ const serviceService = {
 
     deleteService: async (id) => {
         try {
-            console.log("service.params", id)
+            console.log("service.params", id) //success
             const deleteService = await serviceModel.deleteService(id);
             return deleteService;
         } catch (error) {
