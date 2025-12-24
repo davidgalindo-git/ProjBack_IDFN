@@ -1,51 +1,157 @@
 import dogsModel from "../model/dogs.model.js";
 
 const dogsService = {
-    getDogs: async (filters) => {
-        try {
-            const dogs = await dogsModel.selectDogs(filters);
-            console.log("Dogs fetched :", dogs);
-            return dogs;
 
+    getDogs: async (filters = {}) => {
+        const cleanFilters = {};
+
+        // ==========================
+        // Name
+        // ==========================
+        if (filters.name) {
+            cleanFilters.name = filters.name.trim();
+        }
+
+        // ==========================
+        // Sex
+        // ==========================
+        if (filters.sex) {
+            if (!["M", "F"].includes(filters.sex)) {
+                throw new Error("Sexe invalide (M ou F)");
+            }
+            cleanFilters.sex = filters.sex;
+        }
+
+        // ==========================
+        // Boolean fields (0 / 1)
+        // ==========================
+        const booleanFields = ["is_mixed", "is_sterilized", "is_deceased"];
+
+        for (const field of booleanFields) {
+            if (filters[field] !== undefined) {
+                const value = Number(filters[field]);
+                if (![0, 1].includes(value)) {
+                    throw new Error(`Valeur invalide pour ${field}`);
+                }
+                cleanFilters[field] = value;
+            }
+        }
+
+        // ==========================
+        // Birthdate
+        // ==========================
+        if (filters.birthdate) {
+            const date = new Date(filters.birthdate);
+            if (isNaN(date.getTime())) {
+                throw new Error("Date de naissance invalide");
+            }
+            cleanFilters.birthdate = date;
+        }
+
+        // ==========================
+        // Client / Race
+        // ==========================
+        if (filters.client_name) {
+            cleanFilters.client_name = filters.client_name.trim();
+        }
+
+        if (filters.race_name) {
+            cleanFilters.race_name = filters.race_name.trim();
+        }
+
+        // ==========================
+        // Appel model
+        // ==========================
+        try {
+            return await dogsModel.selectDogs(cleanFilters);
         } catch (error) {
-            console.log("Erreur récupération chiens [service] :", error.message);
-            throw error; // <--- OBLIGATOIRE
+            throw new Error("Erreur lors de la récupération des chiens");
         }
     },
+    //==========================
+    //GET BY ID
+    //==========================
+    getIdDog: async (id) => {
+        if (!id || isNaN(id)) {
+            throw new Error("ID du chien invalide");
+        }
+
+        const dog = await dogsModel.getIdDog(id);
+
+        if (!dog) {
+            const err = new Error(`Aucun chien trouvé pour l'ID ${id}`);
+            err.status = 404;
+            throw err;
+        }
+
+        return dog;
+    },
+
+
+
+
+
+    // ==========================
+    // POST
+    // ==========================
     createDog: async (dogData) => {
+        if (!dogData || Object.keys(dogData).length === 0) {
+            throw new Error("Les données du chien sont manquantes");
+        }
+
         try {
             const newDog = await dogsModel.insertDog(dogData);
             return newDog;
         } catch (error) {
-            console.log("Erreur création chien [service]:", error);
-            throw error;
+            throw new Error("Erreur lors de la création du chien");
         }
     },
+
+    // ==========================
+    // PATCH
+    // ==========================
     updateDog: async (id, data) => {
+        if (!id || isNaN(id)) {
+            throw new Error("ID du chien invalide");
+        }
+
+        if (!data || Object.keys(data).length === 0) {
+            throw new Error("Aucune donnée à mettre à jour");
+        }
+
         try {
-            return await dogsModel.updateDog(id, data);
+            const updated = await dogsModel.updateDog(id, data);
+
+            if (!updated) {
+                throw new Error("Chien introuvable");
+            }
+
+            return updated;
         } catch (error) {
-            console.log("Erreur update chien :", error);
-            throw error;
+            throw new Error("Erreur lors de la mise à jour du chien");
         }
     },
+
+    // ==========================
+    // DELETE
+    // ==========================
     deleteDog: async (id) => {
+        if (!id || isNaN(id)) {
+            throw new Error("ID du chien invalide");
+        }
+
         try {
             const deleted = await dogsModel.deleteDog(id);
 
             if (deleted === 0) {
-                throw new Error("Aucun chien trouvé pour cet ID.");
+                throw new Error("Aucun chien trouvé pour cet ID");
             }
 
             return deleted;
-
         } catch (error) {
-            throw error;
+            throw new Error("Erreur lors de la suppression du chien");
         }
-    }
-
-}
-
-
+    },
+};
 
 export default dogsService;

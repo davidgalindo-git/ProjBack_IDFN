@@ -1,7 +1,9 @@
 import { db } from '../db/db.js'
 
 const DogsModel = {
-
+    //=====================
+    // GET ALL DOGS
+    //=====================
     selectDogs: async (filters) => {
         let con;
         try {
@@ -17,10 +19,6 @@ const DogsModel = {
             `;
             let params = [];
 
-            if (filters.id !== undefined) {
-                sql += " AND dogs.id = ?";
-                params.push(filters.id);
-            }
 
             if (filters.name) {
                 sql += " AND dogs.name LIKE ?";
@@ -65,7 +63,7 @@ const DogsModel = {
             }
 
             if (filters.race_name !== undefined) {
-                sql += " AND races.name = ?";
+                sql += " AND races.name LIKE ?";
                 params.push(filters.race_name);
             }
 
@@ -79,6 +77,40 @@ const DogsModel = {
             if (con) await db.disconnectToDB(con);
         }
     },
+
+    //=====================
+    // GET BY ID
+    //====================
+    getIdDog: async (id) => {
+        const query = `
+            SELECT
+                d.*,
+                c.id AS client_id,
+                r.id AS race_id
+            FROM dogs d
+                     LEFT JOIN clients c ON c.id = d.client_id
+                     LEFT JOIN races r   ON r.id = d.race_id
+            WHERE d.id = ?;
+        `;
+
+        const con = await db.connectToDB();
+
+        const [rows] = await con.execute(query, [id]);
+
+        await db.disconnectToDB(con);
+
+
+        // Si aucun chien trouvé
+        if (rows.length === 0) {
+            return null;
+        }
+
+        return rows[0];
+    },
+
+    //================
+    // INSERT DOG
+    //================
 
     insertDog: async (dog) => {
         let con;
@@ -105,6 +137,11 @@ const DogsModel = {
             await db.disconnectToDB(con);
         }
     },
+
+    //====================
+    // UPDATE DOG
+    //====================
+
     updateDog: async (id, dog) => {
         let con;
         try {
@@ -162,6 +199,10 @@ const DogsModel = {
         }
     },
 
+
+    //=======================
+    // DELETE DOG
+    //=======================
     deleteDog: async (id) => {
         let con;
         try {
