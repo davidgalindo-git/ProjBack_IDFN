@@ -93,27 +93,27 @@ const clientService = {
 
         return client
     },
-    updateLocality: async (id, filters) => {
-        if (!await localityModel.isIdValid(id)){
+    updateClient: async (id, filters) => {
+        if (!await clientModel.isIdValid(id)){
             const err = new Error("L'ID n'est pas valide.")
             err.status = 400;
             throw err;
         }
 
-        let locality;
+        let client;
         try {
-            locality = await localityModel.patchLocality(id, filters);
+            client = await clientModel.updateClient(id, filters);
         } catch (error) {
             throw error;
         }
 
-        if (locality.length < 1) {
-            const err = new Error(`Erreur dans la mise à jour de la localité avec l'ID ${id}`);
+        if (client.length < 1) {
+            const err = new Error(`Erreur dans la mise à jour du client avec l'ID ${id}`);
             err.status = 500;
             throw err;
         }
 
-        return locality;
+        return client;
     },
     deleteClient: async (id) => {
         if (!await clientModel.isIdValid(id)){
