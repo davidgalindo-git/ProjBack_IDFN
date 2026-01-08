@@ -11,10 +11,6 @@ import {openApiSpecification} from './swagger.js'
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpecification, {explorer :true}));
 
-app.get('/', (req, res) => {
-    res.send('Hello World!!!!')
-})
-
 // Service route
 app.use('/service', serviceRouter);
 

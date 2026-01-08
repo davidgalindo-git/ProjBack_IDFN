@@ -9,6 +9,10 @@ const localityModel = {
             let sql = "SELECT * FROM locations WHERE 1=1";
             let params = [];
 
+            if (filters.id) {
+                sql += " AND id = ?";
+                params.push(filters.id);
+            }
             if (filters.name) {
                 sql += " AND name LIKE ?";
                 params.push(`%${filters.name}%`);
@@ -22,8 +26,8 @@ const localityModel = {
                 params.push(filters.postal_code_complement);
             }
             if (filters.toponym) {
-                sql += " AND toponym = ?";
-                params.push(filters.toponym);
+                sql += " AND toponym LIKE ?";
+                params.push(`%${filters.toponym}%`);
             }
             if (filters.canton_code) {
                 sql += " AND canton_code = ?";
@@ -46,15 +50,16 @@ const localityModel = {
         let con;
         try {
             con = await db.connectToDB();
-            const rows = await con.query('INSERT INTO locations (name, postal_code, postal_code_complement, toponym, canton_code, language_code) VALUES (?, ?, ?, ?, ?, ?)', [filters.name, filters.postal_code, filters.postal_code_complement, filters.toponym, filters.canton_code, filters.language_code]);
-            return rows[0];
+            const sql = 'INSERT INTO locations (name, postal_code, postal_code_complement, toponym, canton_code, language_code) VALUES (?, ?, ?, ?, ?, ?)'
+            const [rows] = await con.query(sql, [filters.name, filters.postal_code, filters.postal_code_complement, filters.toponym, filters.canton_code, filters.language_code]);
+            return rows.insertId;
         } catch (error) {
             throw SQLException;
         } finally {
             await db.disconnectToDB(con);
         }
     },
-    patchLocality: async (filters) => {
+    patchLocality: async (id, filters) => {
         let con;
         try {
             con = await db.connectToDB();
@@ -62,32 +67,32 @@ const localityModel = {
             let sql = "UPDATE locations SET";
             let params = [];
 
-            if (filters.name !== null) {
+            if (filters.name !== undefined) {
                 sql += " name = ?";
                 params.push(filters.name);
             }
-            if (filters.postal_code !== null) {
+            if (filters.postal_code !== undefined) {
                 sql += ", postal_code = ?";
                 params.push(filters.postal_code);
             }
-            if (filters.postal_code_complement !== null) {
+            if (filters.postal_code_complement !== undefined) {
                 sql += ", postal_code_complement = ?";
                 params.push(filters.postal_code_complement);
             }
-            if (filters.toponym !== null) {
+            if (filters.toponym !== undefined) {
                 sql += ", toponym = ?";
                 params.push(filters.toponym);
             }
-            if (filters.canton_code !== null) {
+            if (filters.canton_code !== undefined) {
                 sql += ", canton_code = ?";
                 params.push(filters.canton_code);
             }
-            if (filters.language_code !== null) {
+            if (filters.language_code !== undefined) {
                 sql += ", language_code = ?";
                 params.push(filters.language_code);
             }
             sql += " WHERE id = ?;"
-            params.push(filters.id);
+            params.push(id);
 
             const [rows] = await con.query(sql, params);
             return rows.affectedRows;
