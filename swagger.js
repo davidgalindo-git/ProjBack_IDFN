@@ -96,6 +96,30 @@ const options = {
                     },
                     required: ['location_id', 'dog_id'],
                 },
+                Client: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'integer', example: 1 },
+                        lastname: { type: 'string', maxLength: 45, example: 'Doe' },
+                        firstname: { type: 'string', maxLength: 45, example: 'John' },
+                        genre: { type: 'string', description: 'M ou F', pattern: '^[A-Z]$', example: 'M' },
+                        email: { type: 'string', format: 'email', example: 'john.doe@example.com' },
+                        phone_number: { type: 'string', pattern: '^\\d{10}$', example: '0123456789' },
+                        address: { type: 'string', minLength: 5, maxLength: 255, example: '123 Rue de la Paix, Paris' }
+                    }
+                },
+                ClientInput: {
+                    type: 'object',
+                    required: ['lastname', 'firstname', 'genre', 'email', 'phone_number', 'address'],
+                    properties: {
+                        lastname: { type: 'string', minLength: 1, maxLength: 45, example: 'Doe' },
+                        firstname: { type: 'string', minLength: 1, maxLength: 45, example: 'John' },
+                        genre: { type: 'string', pattern: '^[A-Z]$', example: 'M' },
+                        email: { type: 'string', format: 'email', example: 'john.doe@example.com' },
+                        phone_number: { type: 'string', pattern: '^\\d{10}$', example: '0123456789' },
+                        address: { type: 'string', minLength: 5, maxLength: 255, example: '123 Rue de la Paix, Paris' }
+                    }
+                },
             },
         },
         paths: {
@@ -440,6 +464,67 @@ const options = {
                         },
                     },
                 },
+            },
+            '/client': {
+                get: {
+                    tags: ['Client'],
+                    summary: 'Rechercher des clients avec filtres',
+                    parameters: [
+                        { name: 'id', in: 'query', schema: { type: 'integer' } },
+                        { name: 'lastname', in: 'query', schema: { type: 'string' } },
+                        { name: 'firstname', in: 'query', schema: { type: 'string' } },
+                        { name: 'genre', in: 'query', schema: { type: 'string' } },
+                        { name: 'email', in: 'query', schema: { type: 'string' } }
+                    ],
+                    responses: {
+                        '200': {
+                            description: 'Liste des clients récupérée.',
+                            content: { 'application/json': { schema: {
+                                        type: 'object',
+                                        properties: { message: { type: 'string' }, body: { type: 'array', items: { $ref: '#/components/schemas/Client' } } }
+                                    } } }
+                        },
+                        '400': { description: 'Filtre non autorisé ou ID invalide.' },
+                        '404': { description: 'Aucun client trouvé.' }
+                    }
+                },
+                post: {
+                    tags: ['Client'],
+                    summary: 'Créer un nouveau client',
+                    requestBody: {
+                        required: true,
+                        content: { 'application/json': { schema: { $ref: '#/components/schemas/ClientInput' } } }
+                    },
+                    responses: {
+                        '200': { description: 'Client créé avec succès.' },
+                        '400': { description: 'Données de validation incorrectes.' },
+                        '500': { description: 'Erreur lors de la création.' }
+                    }
+                }
+            },
+            '/client/{id}': {
+                patch: {
+                    tags: ['Client'],
+                    summary: 'Mettre à jour un client par ID',
+                    parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+                    requestBody: {
+                        content: { 'application/json': { schema: { $ref: '#/components/schemas/Client' } } }
+                    },
+                    responses: {
+                        '200': { description: 'Client mis à jour.' },
+                        '404': { description: 'Client non trouvé ou ID invalide.' }
+                    }
+                },
+                delete: {
+                    tags: ['Client'],
+                    summary: 'Supprimer un client par ID',
+                    parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+                    responses: {
+                        '200': { description: 'Client supprimé.' },
+                        '400': { description: 'ID invalide.' },
+                        '500': { description: 'Erreur lors de la suppression.' }
+                    }
+                }
             },
         },
     },
