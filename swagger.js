@@ -129,7 +129,7 @@ const options = {
                     },
                 },
             },
-            '/locality/{id}': {
+            '/locality/:id': {
                 patch: {
                     tags: ['Localité'],
                     summary: 'Mettre à jour une localité par ID',
@@ -146,8 +146,6 @@ const options = {
                         '500': { description: 'Erreur interne du serveur ou échec de la mise à jour.' },
                     },
                 },
-            },
-            '/locality/{id}': {
                 delete: {
                     tags: ['Localité'],
                     summary: 'Supprimer une localité par ID',
