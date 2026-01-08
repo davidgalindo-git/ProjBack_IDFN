@@ -129,7 +129,7 @@ const options = {
                     },
                 },
             },
-            '/locality/{id}/update': {
+            '/locality/{id}': {
                 patch: {
                     tags: ['Localité'],
                     summary: 'Mettre à jour une localité par ID',
