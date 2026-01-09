@@ -10,21 +10,37 @@ const DogsModel = {
     //=====================
     // GET ALL DOGS
     //=====================
-    selectDogs: async (filters) => {
+    selectDogs: async (filters = {}) => {
         let con;
         try {
             con = await db.connectToDB();
 
             let sql = `
-                SELECT dogs.id, dogs.name, dogs.sex, dogs.is_mixed, dogs.birthdate, dogs.is_sterilized, dogs.is_deceased,
-                       races.name as race_name, CONCAT(clients.firstname,' ',clients.lastname) AS client_name
+                SELECT
+                    dogs.id,
+                    dogs.name,
+                    dogs.sex,
+                    dogs.is_mixed,
+                    dogs.birthdate,
+                    dogs.is_sterilized,
+                    dogs.is_deceased,
+                    races.id   AS race_id,
+                    races.name AS race_name,
+                    clients.id AS client_id,
+                    CONCAT(clients.firstname,' ',clients.lastname) AS client_name
                 FROM dogs
-                         LEFT JOIN races ON dogs.race_id = races.id
+                         LEFT JOIN races   ON dogs.race_id   = races.id
                          LEFT JOIN clients ON dogs.client_id = clients.id
                 WHERE 1=1
             `;
+
             let params = [];
 
+            // ===== GET BY ID =====
+            if (filters.id !== undefined) {
+                sql += " AND dogs.id = ?";
+                params.push(filters.id);
+            }
 
             if (filters.name) {
                 sql += " AND dogs.name LIKE ?";
@@ -56,7 +72,7 @@ const DogsModel = {
                 params.push(filters.is_deceased);
             }
 
-            if (filters.client_name !== undefined) {
+            if (filters.client_name) {
                 sql += `
                 AND (
                     clients.firstname LIKE ?
@@ -68,50 +84,21 @@ const DogsModel = {
                 params.push(pattern, pattern, pattern);
             }
 
-            if (filters.race_name !== undefined) {
+            if (filters.race_name) {
                 sql += " AND races.name LIKE ?";
-                params.push(filters.race_name);
+                params.push(`%${filters.race_name}%`);
             }
 
             const [rows] = await con.query(sql, params);
+
             return rows;
 
         } catch (error) {
             console.log("Erreur selectDogs [model] :", error.message);
-            throw error; // <--- indispensable pour que service/route gèrent l'erreur
+            throw error;
         } finally {
             if (con) await db.disconnectToDB(con);
         }
-    },
-
-    //=====================
-    // GET BY ID
-    //====================
-    getIdDog: async (id) => {
-        const query = `
-            SELECT
-                d.*,
-                c.id AS client_id,
-                r.id AS race_id
-            FROM dogs d
-                     LEFT JOIN clients c ON c.id = d.client_id
-                     LEFT JOIN races r   ON r.id = d.race_id
-            WHERE d.id = ?;
-        `;
-
-        const con = await db.connectToDB();
-
-        const [rows] = await con.execute(query, [id]);
-
-        await db.disconnectToDB(con);
-
-
-        // Si aucun chien trouvé
-        if (rows.length === 0) {
-            return null;
-        }
-
-        return rows[0];
     },
 
     //================

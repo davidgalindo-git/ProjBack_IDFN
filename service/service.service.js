@@ -12,11 +12,11 @@ const serviceService = {
     getServices: async (filters = {}) => {
         console.log("service.params", filters) //success
         /// Allowed keys
-        const allowedKeys = ['date', 'duration_m', 'location', 'dog'];
-
+        const allowedKeys = ['id', 'date', 'duration_m', 'location', 'dog'];
+        console.log("Allowed:", allowedKeys);
         /// Keys sent by the user
         const actualKeys = Object.keys(filters);
-
+        console.log("Actual Keys from user:", actualKeys);
         // Check if any key is NOT in the allowed list
         const forbiddenKeys = actualKeys.filter(key => !allowedKeys.includes(key));
 
@@ -26,15 +26,24 @@ const serviceService = {
             throw error;
         }
 
-        const { date, duration_m, location, dog } = filters;
+        const { id, date, duration_m, location, dog } = filters;
 
         /// Check non empty parameters
-        if (date === "" || duration_m === "" || location === "" || dog === "" ) {
+        if (id === "" || date === "" || duration_m === "" || location === "" || dog === "" ) {
             message = `Il manque l'information...`;
             const error = new Error(message);
             error.status = 400;
             console.log(error);
             throw error;
+        }
+
+        /// Validate date format "yyyy-mm-dd hh:mm:ss"
+        if (id && isNaN(parseInt(id))) {
+            message = 'Format de donnée incorrect, le paramètre doit être un nombre entier'
+            const error = new Error(message);
+            error.status = 400;
+            console.log(error);
+            throw error
         }
 
         /// Validate duration_m int format
@@ -111,27 +120,6 @@ const serviceService = {
 
             return service;
         } catch (error) {
-            console.log("Error fetching service[service]:", error);
-            throw error;
-        }
-    },
-
-    getServiceById: async (id) => {
-        try {
-            const service = await serviceModel.selectServiceById(id);
-
-            /// Check no service found
-            if (!service || (Array.isArray(service) && service.length === 0) || service.affectedRows === 0) {
-                message = "Service non trouvée";
-                const error = new Error(message);
-                error.status = 404;
-                console.log(error);
-                throw error;
-            }
-
-            return service;
-        } catch (error)
-        {
             console.log("Error fetching service[service]:", error);
             throw error;
         }

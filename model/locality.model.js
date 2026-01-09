@@ -7,7 +7,7 @@
 import { db } from '../db/db.js'
 
 const localityModel = {
-    getLocality: async (filters) => {
+    selectLocality: async (filters) => {
         let con;
         try {
             con = await db.connectToDB();
@@ -52,7 +52,7 @@ const localityModel = {
             await db.disconnectToDB(con);
         }
     },
-    postLocality: async (filters) => {
+    createLocality: async (filters) => {
         let con;
         try {
             con = await db.connectToDB();
@@ -65,7 +65,7 @@ const localityModel = {
             await db.disconnectToDB(con);
         }
     },
-    patchLocality: async (id, filters) => {
+    updateLocality: async (id, filters) => {
         let con;
         try {
             con = await db.connectToDB();
