@@ -1,3 +1,9 @@
+/**
+ * File: client.model.js
+ * Description: Model handling SQL queries for Client entities.
+ * Date: 09/01/2026
+ * Author: Nathan Filipowitz
+ */
 import { db } from '../db/db.js'
 
 const clientModel = {

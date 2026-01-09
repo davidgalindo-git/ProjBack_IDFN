@@ -1,3 +1,9 @@
+/**
+ * File: client.route.js
+ * Description: Express router defining HTTP endpoints for managing CRUD operations on clients.
+ * Date: 09/01/2026
+ * Author: Nathan Filipowitz
+ */
 import express from 'express';
 import clientService from "../service/client.service.js";
 

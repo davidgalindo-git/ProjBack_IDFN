@@ -1,3 +1,9 @@
+/**
+ * File: dogs.route.js
+ * Description: Express router defining HTTP endpoints for managing CRUD operations on dogs.
+ * Date: 09/01/2026
+ * Author: Imad El Khattabi
+ */
 import express from "express";
 import dogsService from "../service/dogs.service.js";
 

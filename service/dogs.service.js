@@ -1,3 +1,9 @@
+/**
+ * File: dogs.service.js
+ * Description: Service handling business logic and validation for Dogs entities.
+ * Date: 09/01/2026
+ * Author: Imad El Khattabi
+ */
 import dogsModel from "../model/dogs.model.js";
 
 const dogsService = {

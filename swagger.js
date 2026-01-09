@@ -1,3 +1,9 @@
+/**
+ * File: swagger.js
+ * Description: Configuration for Swagger/OpenAPI documentation generation.
+ * Date: 09/01/2026
+ * Authors: Fabian Rostello, David Galindo, Imad El Khattabi, Nathan Filipowitz
+ */
 import swaggerJsdoc from 'swagger-jsdoc'
 
 const options = {
@@ -36,39 +42,6 @@ const options = {
                     },
                     required: ['name', 'postal_code', 'postal_code_complement', 'toponym', 'canton_code', 'language_code'],
                 },
-                components: {
-                    schemas: {
-                        Dog: {
-                            type: 'object',
-                            properties: {
-                                id: { type: 'integer', example: 12 },
-                                name: { type: 'string', example: 'Rex' },
-                                sex: { type: 'string', example: 'M' },
-                                is_mixed: { type: 'integer', example: 1 },
-                                birthdate: { type: 'string', format: 'date', example: '2020-06-01' },
-                                is_sterilized: { type: 'integer', example: 1 },
-                                is_deceased: { type: 'integer', example: 0 },
-                                client_name: { type: 'string', example: 'Dupont' },
-                                race_name: { type: 'string', example: 'Labrador' },
-                            }
-                        },
-
-                        DogInput: {
-                            type: 'object',
-                            required: ['name', 'sex'],
-                            properties: {
-                                name: { type: 'string', example: 'Rex' },
-                                sex: { type: 'string', example: 'M' },
-                                is_mixed: { type: 'integer', example: 1 },
-                                birthdate: { type: 'string', format: 'date', example: '2020-06-01' },
-                                is_sterilized: { type: 'integer', example: 1 },
-                                is_deceased: { type: 'integer', example: 0 },
-                                client_name: { type: 'string', example: 'Dupont' },
-                                race_name: { type: 'string', example: 'Labrador' },
-                            }
-                        }
-                    }
-                }
                 Service: {
                     type: 'object',
                     properties: {
@@ -247,131 +220,6 @@ const options = {
                     },
                 },
             },
-            paths: {
-                '/dogs': {
-                    get: {
-                        tags: ['Dogs'],
-                        summary: 'Récupérer les chiens avec filtres',
-                        parameters: [
-                            { name: 'name', in: 'query', schema: { type: 'string' } },
-                            { name: 'sex', in: 'query', schema: { type: 'string' } },
-                            { name: 'is_mixed', in: 'query', schema: { type: 'integer' } },
-                            { name: 'birthdate', in: 'query', schema: { type: 'string', format: 'date' } },
-                            { name: 'is_sterilized', in: 'query', schema: { type: 'integer' } },
-                            { name: 'is_deceased', in: 'query', schema: { type: 'integer' } },
-                            { name: 'client_name', in: 'query', schema: { type: 'string' } },
-                            { name: 'race_name', in: 'query', schema: { type: 'string' } },
-                        ],
-                        responses: {
-                            200: {
-                                description: 'Liste des chiens',
-                                content: {
-                                    'application/json': {
-                                        schema: {
-                                            type: 'object',
-                                            properties: {
-                                                message: { type: 'string' },
-                                                body: {
-                                                    type: 'array',
-                                                    items: { $ref: '#/components/schemas/Dog' }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-
-                    post: {
-                        tags: ['Dogs'],
-                        summary: 'Créer un chien',
-                        requestBody: {
-                            required: true,
-                            content: {
-                                'application/json': {
-                                    schema: { $ref: '#/components/schemas/DogInput' }
-                                }
-                            }
-                        },
-                        responses: {
-                            201: {
-                                description: 'Chien créé',
-                                content: {
-                                    'application/json': {
-                                        schema: {
-                                            type: 'object',
-                                            properties: {
-                                                message: { type: 'string' },
-                                                body: { $ref: '#/components/schemas/Dog' }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                '/dogs/{id}': {
-                    get: {
-                        tags: ['Dogs'],
-                        summary: 'Récupérer un chien par ID',
-                        parameters: [
-                            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } }
-                        ],
-                        responses: {
-                            200: {
-                                description: 'Chien trouvé',
-                                content: {
-                                    'application/json': {
-                                        schema: {
-                                            type: 'object',
-                                            properties: {
-                                                message: { type: 'string' },
-                                                body: { $ref: '#/components/schemas/Dog' }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-
-                    patch: {
-                        tags: ['Dogs'],
-                        summary: 'Mettre à jour un chien',
-                        parameters: [
-                            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } }
-                        ],
-                        requestBody: {
-                            required: true,
-                            content: {
-                                'application/json': {
-                                    schema: { $ref: '#/components/schemas/DogInput' }
-                                }
-                            }
-                        },
-                        responses: {
-                            200: {
-                                description: 'Chien mis à jour'
-                            }
-                        }
-                    },
-
-                    delete: {
-                        tags: ['Dogs'],
-                        summary: 'Supprimer un chien',
-                        parameters: [
-                            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } }
-                        ],
-                        responses: {
-                            200: {
-                                description: 'Chien supprimé'
-                            }
-                        }
-                    }
-                }
-            }
             '/service': {
                 get: {
                     tags: ['Service'],

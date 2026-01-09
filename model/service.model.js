@@ -1,3 +1,9 @@
+/**
+ * File: serive.model.js
+ * Description: Model handling SQL queries for service entities.
+ * Date: 09/01/2026
+ * Author: David Galindo
+ */
 import mysql from 'mysql2/promise';
 import { db } from '../db/db.js';
 

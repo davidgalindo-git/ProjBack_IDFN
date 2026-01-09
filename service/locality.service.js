@@ -1,3 +1,9 @@
+/**
+ * File: locality.service.js
+ * Description: Service handling business logic and validation for Locality entities.
+ * Date: 09/01/2026
+ * Author: Fabian Rostello
+ */
 import localityModel from '../model/locality.model.js';
 
 

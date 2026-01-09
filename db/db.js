@@ -1,3 +1,9 @@
+/**
+ * File: db.js
+ * Description: Database configuration and connection management utility using MySQL.
+ * Date: 09/01/2026
+ * Authors: Fabian Rostello, David Galindo, Imad El Khattabi, Nathan Filipowitz
+ */
 import mysql from 'mysql2/promise';
 
 const db = {

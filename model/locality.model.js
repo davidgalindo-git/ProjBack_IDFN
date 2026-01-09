@@ -1,3 +1,9 @@
+/**
+ * File: locality.model.js
+ * Description: Model handling SQL queries for locality entities.
+ * Date: 09/01/2026
+ * Author: Fabian Rostello
+ */
 import { db } from '../db/db.js'
 
 const localityModel = {
