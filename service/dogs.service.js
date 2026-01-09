@@ -2,94 +2,83 @@ import dogsModel from "../model/dogs.model.js";
 
 const dogsService = {
 
-    getDogs: async (filters = {}) => {
-        const cleanFilters = {};
+        getDogs: async (filters = {}) => {
+            const cleanFilters = {};
 
-        // ==========================
-        // Name
-        // ==========================
-        if (filters.name) {
-            cleanFilters.name = filters.name.trim();
-        }
-
-        // ==========================
-        // Sex
-        // ==========================
-        if (filters.sex) {
-            if (!["M", "F"].includes(filters.sex)) {
-                throw new Error("Sexe invalide (M ou F)");
-            }
-            cleanFilters.sex = filters.sex;
-        }
-
-        // ==========================
-        // Boolean fields (0 / 1)
-        // ==========================
-        const booleanFields = ["is_mixed", "is_sterilized", "is_deceased"];
-
-        for (const field of booleanFields) {
-            if (filters[field] !== undefined) {
-                const value = Number(filters[field]);
-                if (![0, 1].includes(value)) {
-                    throw new Error(`Valeur invalide pour ${field}`);
+            // ==========================
+            // ID (AJOUTÉ, le reste inchangé)
+            // ==========================
+            if (filters.id !== undefined) {
+                const id = Number(filters.id);
+                if (isNaN(id)) {
+                    throw new Error("ID du chien invalide");
                 }
-                cleanFilters[field] = value;
+                cleanFilters.id = id;
             }
-        }
 
-        // ==========================
-        // Birthdate
-        // ==========================
-        if (filters.birthdate) {
-            const date = new Date(filters.birthdate);
-            if (isNaN(date.getTime())) {
-                throw new Error("Date de naissance invalide");
+            // ==========================
+            // Name
+            // ==========================
+            if (filters.name) {
+                cleanFilters.name = filters.name.trim();
             }
-            cleanFilters.birthdate = date;
-        }
 
-        // ==========================
-        // Client / Race
-        // ==========================
-        if (filters.client_name) {
-            cleanFilters.client_name = filters.client_name.trim();
-        }
+            // ==========================
+            // Sex
+            // ==========================
+            if (filters.sex) {
+                if (!["M", "F"].includes(filters.sex)) {
+                    throw new Error("Sexe invalide (M ou F)");
+                }
+                cleanFilters.sex = filters.sex;
+            }
 
-        if (filters.race_name) {
-            cleanFilters.race_name = filters.race_name.trim();
-        }
+            // ==========================
+            // Boolean fields (0 / 1)
+            // ==========================
+            const booleanFields = ["is_mixed", "is_sterilized", "is_deceased"];
 
-        // ==========================
-        // Appel model
-        // ==========================
-        try {
-            return await dogsModel.selectDogs(cleanFilters);
-        } catch (error) {
-            throw new Error("Erreur lors de la récupération des chiens");
-        }
-    },
-    //==========================
-    //GET BY ID
-    //==========================
-    getIdDog: async (id) => {
-        if (!id || isNaN(id)) {
-            throw new Error("ID du chien invalide");
-        }
+            for (const field of booleanFields) {
+                if (filters[field] !== undefined) {
+                    const value = Number(filters[field]);
+                    if (![0, 1].includes(value)) {
+                        throw new Error(`Valeur invalide pour ${field}`);
+                    }
+                    cleanFilters[field] = value;
+                }
+            }
 
-        const dog = await dogsModel.getIdDog(id);
+            // ==========================
+            // Birthdate
+            // ==========================
+            if (filters.birthdate) {
+                const date = new Date(filters.birthdate);
+                if (isNaN(date.getTime())) {
+                    throw new Error("Date de naissance invalide");
+                }
+                cleanFilters.birthdate = date;
+            }
 
-        if (!dog) {
-            const err = new Error(`Aucun chien trouvé pour l'ID ${id}`);
-            err.status = 404;
-            throw err;
-        }
+            // ==========================
+            // Client / Race
+            // ==========================
+            if (filters.client_name) {
+                cleanFilters.client_name = filters.client_name.trim();
+            }
 
-        return dog;
-    },
+            if (filters.race_name) {
+                cleanFilters.race_name = filters.race_name.trim();
+            }
 
-
-
-
+            // ==========================
+            // Appel model (INCHANGÉ)
+            // ==========================
+            try {
+                return await dogsModel.selectDogs(cleanFilters);
+            } catch (error) {
+                throw new Error("Erreur lors de la récupération des chiens");
+            }
+        },
 
     // ==========================
     // POST

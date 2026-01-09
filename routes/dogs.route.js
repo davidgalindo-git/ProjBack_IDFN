@@ -10,6 +10,7 @@ router.use(express.json());
  */
 router.get("/", async (req, res) => {
     const filters = {
+        id: req.query.id ? Number(req.query.id) : undefined,
         name: req.query.name,
         sex: req.query.sex,
         is_mixed: req.query.is_mixed ? parseInt(req.query.is_mixed, 10) : undefined,
@@ -28,19 +29,6 @@ router.get("/", async (req, res) => {
     });
 });
 
-/**
- * GET /dogs/:id
- * Récuperation d'un chien par l'id
- */
-router.get("/:id", async (req, res) => {
-        const dogId = Number(req.params.id);
-        const dog = await dogsService.getIdDog(dogId);
-
-        res.status(200).json({
-            message: "Chien récupéré avec succès !",
-            body: dog
-        });
-});
 
 
 
