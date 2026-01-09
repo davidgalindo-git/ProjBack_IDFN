@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 
         let message = "";
         if (locality.length > 1) {
-            message = `Les localités ont bien été trouvés`;     // Si plusieurs localités
+            message = `Les localités ont bien été trouvés`;                             // Si plusieurs localités
         } else {
             message = `La localité ${locality[0]["toponym"]} à bien été trouvée`;       // Si une seule localité
         }

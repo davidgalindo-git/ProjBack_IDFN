@@ -37,12 +37,12 @@ const localityModel = {
                 params.push(`%${filters.toponym}%`);
             }
             if (filters.canton_code) {
-                sql += " AND canton_code = ?";
-                params.push(filters.canton_code);
+                sql += " AND canton_code LIKE ?";
+                params.push(`%${filters.canton_code}%`);
             }
             if (filters.language_code) {
-                sql += " AND language_code = ?";
-                params.push(filters.language_code);
+                sql += " AND language_code LIKE ?";
+                params.push(`%${filters.language_code}%`);
             }
 
             const [rows] = await con.query(sql, params);
