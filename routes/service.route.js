@@ -23,23 +23,6 @@ serviceRouter.get('/', async (req, res) => {
     }
 });
 
-serviceRouter.get('/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        console.log("route.query", id) //success
-
-        const services = await serviceService.getServiceById(id);
-        console.log("route.res", services) //success
-
-        message = `Le ou les services ont bien été récupéré.s !`;
-        res.status(200).json({message: message, body: services});
-
-    } catch (error) {
-        const errorCode = error.status ? error.status : 500;
-        res.status(errorCode).json({ error: error.message });
-    }
-});
-
 serviceRouter.post('/', async (req, res) => {
     try {
         const {date, duration_m, location_id, dog_id} = req.body;
