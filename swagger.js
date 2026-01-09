@@ -292,7 +292,7 @@ const options = {
                                             },
                                             body: {
                                                 type: 'string',
-                                                example: `http://localhost:${port}/service?id=`
+                                                example: `http://localhost:3000/service?id=`
                                             },
                                         },
                                     },
