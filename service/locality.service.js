@@ -2,7 +2,7 @@ import localityModel from '../model/locality.model.js';
 
 
 const localityService = {
-    getLocality: async (filters) => {
+    selectLocality: async (filters) => {
         const authorizedFilters = ['id', 'name', 'postal_code', 'postal_code_complement', 'toponym', 'canton_code', 'language_code'];
         for (let filter in filters) {
             if (!authorizedFilters.find(element => element === filter)) {
@@ -30,7 +30,7 @@ const localityService = {
 
         let locality;
         try {
-            locality = await localityModel.getLocality(filters);
+            locality = await localityModel.selectLocality(filters);
         } catch (error) {
             throw error;
         }
@@ -43,7 +43,7 @@ const localityService = {
 
         return locality;
     },
-    setLocality: async (filters) => {
+    createLocality: async (filters) => {
         const {name, postal_code, postal_code_complement, toponym, canton_code, language_code} = filters;
 
         if (name === "" || name === undefined || name.length < 1 || name.length > 45) {
@@ -82,7 +82,7 @@ const localityService = {
 
         let locality;
         try {
-            locality = await localityModel.postLocality(filters);
+            locality = await localityModel.createLocality(filters);
         } catch (error) {
             throw error;
         }
@@ -104,7 +104,7 @@ const localityService = {
 
         let locality;
         try {
-            locality = await localityModel.patchLocality(id, filters);
+            locality = await localityModel.updateLocality(id, filters);
         } catch (error) {
             throw error;
         }

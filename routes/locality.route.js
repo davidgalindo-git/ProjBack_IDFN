@@ -6,7 +6,7 @@ router.use(express.json());
 
 router.get('/', async (req, res) => {
     try {
-        let locality = await localityService.getLocality(req.query);
+        let locality = await localityService.selectLocality(req.query);
 
         let message = "";
         if (locality.length > 1) {
@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        let locality = await localityService.setLocality(req.body);
+        let locality = await localityService.createLocality(req.body);
 
         if (locality) {
             const message = `La localité ${req.body.name} à bien été ajoutée`;
