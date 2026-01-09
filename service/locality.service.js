@@ -9,6 +9,7 @@ import localityModel from '../model/locality.model.js';
 
 const localityService = {
     selectLocality: async (filters) => {
+        // Filtres autorisés
         const authorizedFilters = ['id', 'name', 'postal_code', 'postal_code_complement', 'toponym', 'canton_code', 'language_code'];
         for (let filter in filters) {
             if (!authorizedFilters.find(element => element === filter)) {
@@ -20,6 +21,7 @@ const localityService = {
 
         const {id, name, postal_code, postal_code_complement, toponym, canton_code, language_code} = filters;
 
+        // Validation des données
         if (id !== undefined) {
             if (isNaN(id) || !await localityModel.isIdValid(id)){
                 const err = new Error("L'ID n'est pas valide.")
@@ -52,6 +54,7 @@ const localityService = {
     createLocality: async (filters) => {
         const {name, postal_code, postal_code_complement, toponym, canton_code, language_code} = filters;
 
+        // Validation des données
         if (name === "" || name === undefined || name.length < 1 || name.length > 45) {
             const err = new Error("Le nom doit être compris entre 1 et 45 caractères.")
             err.status = 400;
@@ -86,6 +89,7 @@ const localityService = {
             throw err;
         }
 
+        // Appel du model
         let locality;
         try {
             locality = await localityModel.createLocality(filters);
@@ -102,12 +106,14 @@ const localityService = {
         return locality
     },
     updateLocality: async (id, filters) => {
+        // Check si l'ID est valide
         if (!await localityModel.isIdValid(id)){
             const err = new Error("L'ID n'est pas valide.")
             err.status = 400;
             throw err;
         }
 
+        // Appel du model
         let locality;
         try {
             locality = await localityModel.updateLocality(id, filters);
@@ -124,12 +130,14 @@ const localityService = {
         return locality;
     },
     deleteLocality: async (id) => {
+        // Vérification de l'ID
         if (!await localityModel.isIdValid(id)){
             const err = new Error("L'ID n'est pas valide.")
             err.status = 400;
             throw err;
         }
 
+        // Appel du model
         let locality;
         try {
             locality = await localityModel.deleteLocality(id);

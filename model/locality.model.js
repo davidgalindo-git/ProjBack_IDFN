@@ -12,6 +12,7 @@ const localityModel = {
         try {
             con = await db.connectToDB();
 
+            // Créer la requête de base
             let sql = "SELECT * FROM locations WHERE 1=1";
             let params = [];
 
@@ -36,12 +37,12 @@ const localityModel = {
                 params.push(`%${filters.toponym}%`);
             }
             if (filters.canton_code) {
-                sql += " AND canton_code = ?";
-                params.push(filters.canton_code);
+                sql += " AND canton_code LIKE ?";
+                params.push(`%${filters.canton_code}%`);
             }
             if (filters.language_code) {
-                sql += " AND language_code = ?";
-                params.push(filters.language_code);
+                sql += " AND language_code LIKE ?";
+                params.push(`%${filters.language_code}%`);
             }
 
             const [rows] = await con.query(sql, params);
@@ -70,6 +71,7 @@ const localityModel = {
         try {
             con = await db.connectToDB();
 
+            // Créer la requête de mise à jour dynamique
             let sql = "UPDATE locations SET";
             let params = [];
 
@@ -114,6 +116,7 @@ const localityModel = {
             con = await db.connectToDB();
             const [rows_link] = await con.query('DELETE FROM services WHERE location_id = ?', id);
 
+            // Si des lignes ont été affectées, supprimer la localité
             if (rows_link.affectedRows >= 1){
                 const [rows] = await con.query('DELETE FROM locations WHERE id = ?', id);
                 return rows.affectedRows;
@@ -124,6 +127,8 @@ const localityModel = {
             await db.disconnectToDB(con);
         }
     },
+
+    // Helper pour vérifier si un ID de localité est valide
     isIdValid: async (id) => {
         let con;
         try {

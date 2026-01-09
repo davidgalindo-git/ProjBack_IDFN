@@ -12,13 +12,14 @@ router.use(express.json());
 
 router.get('/', async (req, res) => {
     try {
+        // Appel du service
         let locality = await localityService.selectLocality(req.query);
 
         let message = "";
         if (locality.length > 1) {
-            message = `Les localités ont bien été trouvés`;
+            message = `Les localités ont bien été trouvés`;                             // Si plusieurs localités
         } else {
-            message = `La localité ${locality[0]["toponym"]} à bien été trouvée`;
+            message = `La localité ${locality[0]["toponym"]} à bien été trouvée`;       // Si une seule localité
         }
         return res.status(200).json({message: message, body: locality})
     } catch (error) {
@@ -29,6 +30,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
+        // Appel du service
         let locality = await localityService.createLocality(req.body);
 
         if (locality) {
@@ -44,6 +46,7 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id)
+        // Appel du service
         let locality = await localityService.updateLocality(id, req.body);
 
         if (locality) {
@@ -59,6 +62,7 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id)
+        // Appel du service
         const locality = await localityService.deleteLocality(id);
 
         if (locality) {
