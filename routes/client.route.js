@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
         if (client.length > 1) {
             message = `Les clients ont bien été trouvés`;
         } else {
-            message = `Le client ${client[0]} à bien été trouvée`;
+            message = `Le client à bien été trouvée`;
         }
         return res.status(200).json({message: message, body: client})
     } catch (error) {

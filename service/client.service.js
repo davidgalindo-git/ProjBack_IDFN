@@ -10,6 +10,7 @@ const clientService = {
     getClient: async (filters) => {
         const authorizedFilters = ['id', 'lastname', 'firstname', 'genre', 'email', 'phone_number', 'address'];
         for (let filter in filters) {
+            // on compare chaque filtre aux filtres authorisés
             if (!authorizedFilters.find(element => element === filter)) {
                 const err = new Error(`Le filtre ${filter} n'est pas autorisé.`);
                 err.status = 400;

@@ -12,7 +12,8 @@ const clientModel = {
         try {
             con = await db.connectToDB()
 
-            let sql = "SELECT * FROM clients WHERE 1=1"; //returns all clients if no parameters are added to the url
+            // 'WHERE 1=1' est toujours vrai, on peut donc ensuite ajouter autant de 'AND' que souhaité.
+            let sql = "SELECT * FROM clients WHERE 1=1"; 
             let params = [];
 
             if (filters.id) {
@@ -57,6 +58,7 @@ const clientModel = {
         let con;
         try {
             con = await db.connectToDB();
+            // Convertir les strings non-remplis en null pour prévenir des problèmes lors de l'insertion
             if (!filters.lastname || filters.lastname.length === 0) {
                 filters.lastname = null;
             }
