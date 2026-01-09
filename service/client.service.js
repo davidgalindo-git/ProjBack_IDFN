@@ -61,7 +61,7 @@ const clientService = {
             throw err;
         }
         // source for email validation regex: https://www.geeksforgeeks.org/javascript/how-to-validate-email-address-using-regexp-in-javascript/
-        if (email === "" || email === undefined || email.length < 5 || email.length > 255 || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/.test(email)) {
+        if (email === "" || email === undefined || email.length < 5 || email.length > 255 || !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,6}$/.test(email)) {
             const err = new Error("L'adresse email n'est pas valide.")
             err.status = 400;
             throw err;
