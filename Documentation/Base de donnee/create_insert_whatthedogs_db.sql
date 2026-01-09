@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `WhatTheDog`.`locations` (
   `toponym` VARCHAR(45) NULL,
   `canton_code` VARCHAR(2) NULL,
   `language_code` VARCHAR(3) NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
