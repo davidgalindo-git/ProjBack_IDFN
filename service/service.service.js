@@ -1,3 +1,9 @@
+/**
+ * File: service.service.js
+ * Description: Service handling business logic and validation for Service entities.
+ * Date: 09/01/2026
+ * Author: David Galindo
+ */
 import serviceModel from '../model/service.model.js';
 
 let message;

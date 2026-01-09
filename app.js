@@ -1,3 +1,9 @@
+/**
+ * File: app.js
+ * Description: Main application entry point setting up Express server, middleware, and routes.
+ * Date: 09/01/2026
+ * Authors: Fabian Rostello, David Galindo, Imad El Khattabi, Nathan Filipowitz
+ */
 import express from 'express'
 const app = express()
 const port = process.env.PORT

@@ -1,3 +1,9 @@
+/**
+ * File: client.service.js
+ * Description: Service handling business logic and validation for Client entities.
+ * Date: 09/01/2026
+ * Author: Nathan Filipowitz
+ */
 import clientModel from '../model/client.model.js';
 
 const clientService = {

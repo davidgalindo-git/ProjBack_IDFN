@@ -1,3 +1,9 @@
+/**
+ * File: swagger.js
+ * Description: Configuration for Swagger/OpenAPI documentation generation.
+ * Date: 09/01/2026
+ * Authors: Fabian Rostello, David Galindo, Imad El Khattabi, Nathan Filipowitz
+ */
 import swaggerJsdoc from 'swagger-jsdoc'
 
 const options = {

@@ -1,3 +1,9 @@
+/**
+ * File: service.route.js
+ * Description: Express router defining HTTP endpoints for managing CRUD operations on service.
+ * Date: 09/01/2026
+ * Author: David Galindo
+ */
 import express from 'express';
 import serviceService from "../service/service.service.js";
 

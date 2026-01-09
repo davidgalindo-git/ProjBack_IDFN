@@ -1,3 +1,9 @@
+/**
+ * File: dogs.model.js
+ * Description: Model handling SQL queries for dogs entities.
+ * Date: 09/01/2026
+ * Author: Imad El Khattabi
+ */
 import { db } from '../db/db.js'
 
 const DogsModel = {
