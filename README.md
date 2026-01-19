@@ -47,7 +47,7 @@ Exécutez le fichier `Documentation/Base de donnee/create_insert_whatthedogs_db.
 HOST=localhost
 USER=votre_utilisateur
 PASSWORD=votre_mot_de_passe
-DATABASE=nom_bdd
+DATABASE=whatthedog
 PORT=3000
 ```
 
