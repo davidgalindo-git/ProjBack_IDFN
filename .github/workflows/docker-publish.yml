@@ -1,7 +1,7 @@
 name: Build and Push to GHCR
 on:
   push:
-  branches: [ "feature/I-324-docker" ]
+    branches: [ "feature/I-324-docker" ]
   workflow_dispatch: # Permet de lancer manuellement depuis l'interface
 env:
   REGISTRY: ghcr.io
